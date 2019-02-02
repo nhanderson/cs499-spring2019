@@ -21,5 +21,14 @@ int NN1toKmaxPredict( int n_train_observations, int n_test_observations, int n_f
     distance_vec(i) = diff_vec.norm(); 
     sorted_index_vec(i) = i;
   }
-  
+  std::sort(sorted_index_vec.data(), sored_index_vec.data() + sorted_index_vec.size(), 
+            [&distance_vec](int left, int right){ return distance_vec(left) < distance_vec(right)});
+  double total_observations = 0.0;
+  for( int k = 0; k < max_neighbors; k++ ){
+    int row = sorted_index_vec(k);
+    int neighbors = k+1;
+    total_observations += train_out_ptr[row];
+    preditions_out_ptr[k] = total_observations/neighbors; 
+  }
+  return 0;
 }
