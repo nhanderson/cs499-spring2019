@@ -28,7 +28,7 @@ if( status != 0 ){
 }
 
 R_CMethodDef cMethods[] = {
-  {"NN1toKmaxPredict_interface", (DL_FUNC) &NN1toKmaxPredict_interface, 5 }
+  {"NN1toKmaxPredict_interface", (DL_FUNC) &NN1toKmaxPredict_interface, 8 }
 };
 
 
