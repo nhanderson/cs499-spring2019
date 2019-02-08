@@ -31,7 +31,7 @@ int NN1toKmaxPredict( int n_train_observations, int n_test_observations, int n_f
     
   
   for(int i=0; i<n_train_observations; i++){
-    diff_vec = abs(train_in_mat.row(i).transpose()-test_in_vec) + abs(test_in_mat.row(i).transpose()-train_out_vec); // |test x-train x| + |test y-train y|
+    diff_vec = abs(train_in_mat.row(i).transpose().array()-test_in_vec.array()) + abs(test_in_mat.row(i).transpose().array()-train_out_vec.array()); // |test x-train x| + |test y-train y|
     distance_vec(i) = diff_vec.norm(); 
     sorted_index_vec(i) = i;
   }
