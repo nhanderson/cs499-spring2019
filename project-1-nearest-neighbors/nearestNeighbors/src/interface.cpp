@@ -11,11 +11,11 @@ int status = NN1toKmaxPredict(*n_train_observations, *n_test_observations, *n_fe
                                 *max_neighbors, train_in_ptr, train_out_ptr, 
                                 test_in_ptr, predictions_out_ptr);
   
-if(status != NO_ERR){
-  if(status == INVALID_NUM_TRAIN_OBSERVATIONS ){
+if( status != 0 ){
+  if( status == INVALID_NUM_TRAIN_OBSERVATIONS ){
     error("Invalid Number of Training Observations");
   }
-  else if(status == INVALID_NUM_TEST_OBSERVATIONS){
+  else if( status == INVALID_NUM_TEST_OBSERVATIONS ){
     error("Invalid Number of Test Observations");
   }
   else if( status == INVALID_NUM_FEATURES ){
@@ -25,9 +25,10 @@ if(status != NO_ERR){
     error("Invalid Max Number of Neighbors");
   }
 } 
+}
 
 R_CMethodDef cMethods[] = {
   {"NN1toKmaxPredict_interface", (DL_FUNC) &NN1toKmaxPredict_interface, 5 }
-}
-}
+};
+
 
