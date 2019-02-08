@@ -7,6 +7,18 @@ int NN1toKmaxPredict( int n_train_observations, int n_test_observations, int n_f
                       double *test_in_ptr, double *predictions_out_ptr)
 {
   // Error Checking
+  if( max_neighbors < 0 ){
+    return INVALID_MAX_NUMBER_NEIGHBORS;
+  }
+  if( n_train_observations < 0 ){
+    return INVALID_NUM_TRAIN_OBSERVATIONS;
+  }
+  if( n_test_observations < 0 ){
+    return INVALID_NUM_TEST_OBSERVATIONS;
+  } 
+  if( n_features < 0 ){
+    return INVALID_NUM_FEATURES;
+  }
   
   Eigen::VectorXd distance_vec(n_train_observations);
   // Use Eigen to map 
@@ -16,6 +28,8 @@ int NN1toKmaxPredict( int n_train_observations, int n_test_observations, int n_f
   Eigen::Map< Eigen::VectorXd > test_in_vec(test_in_ptr, n_features); // not sure what this is for
   Eigen::VectorXd diff_vec(n_features);
   Eigen::VectorXi sorted_index_vec(n_train_observations)
+    
+  
   for(int i=0; i<n_train_observations; i++){
     diff_vec = abs(train_in_mat.row(i).transpose()-test_in_vec) + abs(test_in_mat.row(i).transpose()-train_out_vec); // |test x-train x| + |test y-train y|
     distance_vec(i) = diff_vec.norm(); 
@@ -30,5 +44,5 @@ int NN1toKmaxPredict( int n_train_observations, int n_test_observations, int n_f
     total_observations += train_out_ptr[row];
     preditions_out_ptr[k] = total_observations/neighbors; 
   }
-  return 0;
+  return NO_ERR;
 }
