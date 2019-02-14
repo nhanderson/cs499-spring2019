@@ -26,7 +26,11 @@ int NN1toKmaxPredict( const int n_train_observations,
   }
  
   // Use Eigen to map 
+<<<<<<< HEAD
   Eigen::Map< Eigen::MatrixXd > train_in_mat((double*) train_in_ptr, n_train_observations  , n_features); // matrix training data inputs
+=======
+  Eigen::Map< Eigen::MatrixXd > train_in_mat((double*) train_in_ptr, n_train_observations, n_features); // matrix training data inputs
+>>>>>>> a36e3beff9e9a277ffe1d49c2310d94207fd051e
   Eigen::Map< Eigen::VectorXd > test_in_vec((double*) test_in_ptr, n_features); // vector test data inputs
   Eigen::Map< Eigen::MatrixXd > test_in_mat((double*)test_in_ptr, n_test_observations, n_features); // matrix test data input
   Eigen::Map< Eigen::VectorXd > train_out_vec((double*)train_out_ptr, n_train_observations); // vector training data outputs
