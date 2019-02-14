@@ -1,0 +1,48 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: i386-w64-mingw32/i386 (32-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "nearestNeighbors"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> options(pager = "console")
+> library('nearestNeighbors')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("nn")
+> ### * nn
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: nn
+> ### Title: nearest neighbors algorithm
+> ### Aliases: nn
+> 
+> ### ** Examples
+> 
+> data(zip.train, package-"ElemStatLearn")
+Warning in data(zip.train, package - "ElemStatLearn") :
+  data set 'zip.train' not found
+Warning in data(zip.train, package - "ElemStatLearn") :
+  data set 'package - "ElemStatLearn"' not found
+> i01 <- which(zip.train[,1] %in% c(0,1))
+Error in zip.train[, 1] %in% c(0, 1) : object 'zip.train' not found
+Calls: which -> %in%
+Execution halted

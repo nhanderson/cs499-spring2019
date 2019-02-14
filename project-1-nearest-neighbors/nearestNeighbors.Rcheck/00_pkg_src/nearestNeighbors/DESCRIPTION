@@ -11,4 +11,6 @@ LazyData: true
 LinkingTo: RcppEigen
 RoxygenNote: 6.1.1
 Imports:
-Suggests:ElemStatLearn
+Suggests: ElemStatLearn
+NeedsCompilation: yes
+Packaged: 2019-02-14 05:38:13 UTC; Megan Miyuki Mikami

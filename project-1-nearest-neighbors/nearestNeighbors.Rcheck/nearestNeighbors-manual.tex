@@ -1,0 +1,78 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8]{inputenc} % @SET ENCODING@
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `nearestNeighbors'}}
+\par\bigskip{\large \today}
+\end{center}
+\begin{description}
+\raggedright{}
+\inputencoding{utf8}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{Compute Nearest neighbors using C++}
+\item[Version]\AsIs{2019.1.31}
+\item[Author]\AsIs{Nicholas Anderson, Jacob Lemon, Megan Mikami}
+\item[Maintainer]\AsIs{Nicholas Anderson }\email{nha4@nau.edu}\AsIs{}
+\item[Description]\AsIs{Efficient computation of nearest neighbors}
+\item[License]\AsIs{GPL-3}
+\item[Encoding]\AsIs{UTF-8}
+\item[LazyData]\AsIs{true}
+\item[LinkingTo]\AsIs{RcppEigen}
+\item[RoxygenNote]\AsIs{6.1.1}
+\item[Imports]\AsIs{}
+\item[Suggests]\AsIs{ElemStatLearn}
+\item[NeedsCompilation]\AsIs{yes}
+\item[Archs]\AsIs{i386, x64}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{nn}{nearest neighbors algorithm}{nn}
+%
+\begin{Description}\relax
+R function that wraps the C++ code.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+nn(x.mat, y.vec, testx.vec, max.neighbors)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x.mat}] numeric train featrue matrix [n x p]
+
+\item[\code{y.vec}] numeric train label vecotr [n], either all 0/1 for binary classificiation, or other real numbers for regression (multi-class classification not supported)
+
+\item[\code{testx.vec}] numeric test feature vector [p]
+
+\item[\code{max.neighbors}] scalar integer, max number of neighbors
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+numeric vector of size man.neighbors, predictions from 1 to max.neighbors
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+data(zip.train, package-"ElemStatLearn")
+i01 <- which(zip.train[,1] %in% c(0,1))
+train.i <- i01[1:5]
+test.i <- i01[6]
+x <- zip.train[train.i, -1]
+y <- zip.train[train.i, 1]
+testx <- zip.train[test.i, -1]
+nn(x ,y, testx , 3)
+zip.train[test.i, 1]
+
+\end{ExampleCode}
+\end{Examples}
+\printindex{}
+\end{document}
