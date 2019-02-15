@@ -21,22 +21,7 @@
 #' NN1toKmaxPredict(x ,y, testx , 3)
 #' zip.train[test.i, 1]
 #' 
-<<<<<<< HEAD
-nn <- function(x.mat, y.vec, testx.vec, max.neighbors){
-  result.list <- .C("NN1toKmaxPredict_interface", 
-                    as.integer(nrow(x.mat)), #' n_train_observations
-                    as.integer(nrow(x.mat)), #' n_test_observations
-                    as.integer(ncol(x.mat)), #' n_features
-                    as.integer(max.neighbors), #' max_neighbors
-                    as.double(x.mat), #' train_in_ptr
-                    as.double(y.vec), #' train_out_ptr
-                    as.double(testx.vec), #' test_in_ptr
-                    integer(max.neighbors), #' predictions_out_ptr
-                    PACKAGE="nearestNeighbor")
-  result.list$predictions
-}
 
-=======
 NN1toKmaxPredict <- function(x.mat, y.vec, testx.vec, max.neighbors){
   if(!all(is.matrix(x.mat))){
     stop("x.mat must be a matrix")
@@ -56,9 +41,16 @@ NN1toKmaxPredict <- function(x.mat, y.vec, testx.vec, max.neighbors){
   if(!all(length(testx.vec)==ncol(x.mat))){
     stop("The length of y.vec must match the same number of rows as x.mat")
   }
-  result.list <- .c("NN1toKmaxPredict_interface", as.double(x.mat), as.double(y.vec), as.double(testx.vec), 
-                    as.integer(nrow(x.mat)), as.integer(ncol(x.mat)), as.integer(max.neighbors), 
-                    predictions-double(max.neighbors), PACKAGE="nearestNeighbor")
+  result.list <- .C("NN1toKmaxPredict_interface", 
+                    as.integer(nrow(x.mat)), #' n_train_observations
+                    as.integer(nrow(x.mat)), #' n_test_observations
+                    as.integer(ncol(x.mat)), #' n_features
+                    as.integer(max.neighbors), #' max_neighbors
+                    as.double(x.mat), #' train_in_ptr
+                    as.double(y.vec), #' train_out_ptr
+                    as.double(testx.vec), #' test_in_ptr
+                    integer(max.neighbors), #' predictions_out_ptr
+                    PACKAGE="nearestNeighbor")
   result.list$predictions
 }
 
@@ -90,4 +82,3 @@ NNLearnCV <-function(x.mat, y.vec, max.neighbors=as.integer(30), fold.vec=NULL, 
   
   
 }
->>>>>>> 0d695ffb887c7b60fe0951eca67e25e04666693e
