@@ -23,22 +23,22 @@
 #' 
 
 NN1toKmaxPredict <- function(x.mat, y.vec, testx.vec, max.neighbors){
-  if(!all(is.matrix(x.mat))){
+  if(!is.matrix(x.mat)){
     stop("x.mat must be a matrix")
   }
-  if(!all(is.vector(y.vec))){
+  if(!is.vector(y.vec)){
     stop("y.vec must be a vector")
   }
-  if(!all(is.vector(testx.vec))){
+  if(!is.vector(testx.vec)){
     stop("testx.vec must be a vector")
   }
-  if(!all(is.integer(max.neighbors))){
+  if(!is.integer(max.neighbors)){
     stop("max.neighbors must be an integer")
   }
-  if(!all(length(y.vec)==nrow(x.mat))){
+  if(length(y.vec)!=nrow(x.mat)){
     stop("The length of y.vec must match the same number of rows as x.mat")
   }
-  if(!all(length(testx.vec)==ncol(x.mat))){
+  if(length(testx.vec)!=ncol(x.mat)){
     stop("The length of y.vec must match the same number of rows as x.mat")
   }
   result.list <- .C("NN1toKmaxPredict_interface", 
@@ -64,19 +64,19 @@ NNLearnCV <-function(x.mat, y.vec, max.neighbors=as.integer(30), fold.vec=NULL, 
   if(length(fold.vec)!=length(y.vec)){
     stop("fold.vec must be the same size as y.vec")
   }
-  if(!all(is.matrix(x.mat))){
+  if(!is.matrix(x.mat)){
     stop("x.mat must be a matrix")
   }
-  if(!all(is.vector(y.vec))){
+  if(!is.vector(y.vec)){
     stop("y.vec must be a vector")
   }
-  if(!all(length(y.vec)==nrow(x.mat))){
+  if(!length(y.vec)==nrow(x.mat)){
     stop("The length of y.vec must match the same number of rows as x.mat")
   }
-  if(!all(is.integer(max.neighbors))){
+  if(!is.integer(max.neighbors)){
     stop("max.neighbors must be an integer")
   }
-  if(!all(is.integer(n.folds))){
+  if(!is.integer(n.folds)){
     stop("n.folds must be an integer")
   }
   
