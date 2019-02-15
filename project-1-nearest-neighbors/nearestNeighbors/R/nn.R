@@ -11,16 +11,17 @@
 #' @export 
 #'
 #' @examples
-#' data(zip.train, package-"ElemStatLearn")
+#' data(zip.train, package="ElemStatLearn")
 #' i01 <- which(zip.train[,1] %in% c(0,1))
 #' train.i <- i01[1:5]
 #' test.i <- i01[6]
 #' x <- zip.train[train.i, -1]
 #' y <- zip.train[train.i, 1]
 #' testx <- zip.train[test.i, -1]
-#' nn(x ,y, testx , 3)
+#' NN1toKmaxPredict(x ,y, testx , 3)
 #' zip.train[test.i, 1]
 #' 
+<<<<<<< HEAD
 nn <- function(x.mat, y.vec, testx.vec, max.neighbors){
   result.list <- .C("NN1toKmaxPredict_interface", 
                     as.integer(nrow(x.mat)), #' n_train_observations
@@ -35,3 +36,58 @@ nn <- function(x.mat, y.vec, testx.vec, max.neighbors){
   result.list$predictions
 }
 
+=======
+NN1toKmaxPredict <- function(x.mat, y.vec, testx.vec, max.neighbors){
+  if(!all(is.matrix(x.mat))){
+    stop("x.mat must be a matrix")
+  }
+  if(!all(is.vector(y.vec))){
+    stop("y.vec must be a vector")
+  }
+  if(!all(is.vector(testx.vec))){
+    stop("testx.vec must be a vector")
+  }
+  if(!all(is.integer(max.neighbors))){
+    stop("max.neighbors must be an integer")
+  }
+  if(!all(length(y.vec)==nrow(x.mat))){
+    stop("The length of y.vec must match the same number of rows as x.mat")
+  }
+  if(!all(length(testx.vec)==ncol(x.mat))){
+    stop("The length of y.vec must match the same number of rows as x.mat")
+  }
+  result.list <- .c("NN1toKmaxPredict_interface", as.double(x.mat), as.double(y.vec), as.double(testx.vec), 
+                    as.integer(nrow(x.mat)), as.integer(ncol(x.mat)), as.integer(max.neighbors), 
+                    predictions-double(max.neighbors), PACKAGE="nearestNeighbor")
+  result.list$predictions
+}
+
+NNLearnCV <-function(x.mat, y.vec, max.neighbors=as.integer(30), fold.vec=NULL, n.folds=as.integer(5)){
+  # If folds is null, randomly assign fold values to each row between 1 and n.folds
+  if(is.null(fold.vec)){
+    fold.vec <- sample(rep(1:n.folds, l=nrow(x.mat)))
+  }
+  
+  # Perform type checking and size checking on input
+  if(length(fold.vec)!=length(y.vec)){
+    stop("fold.vec must be the same size as y.vec")
+  }
+  if(!all(is.matrix(x.mat))){
+    stop("x.mat must be a matrix")
+  }
+  if(!all(is.vector(y.vec))){
+    stop("y.vec must be a vector")
+  }
+  if(!all(length(y.vec)==nrow(x.mat))){
+    stop("The length of y.vec must match the same number of rows as x.mat")
+  }
+  if(!all(is.integer(max.neighbors))){
+    stop("max.neighbors must be an integer")
+  }
+  if(!all(is.integer(n.folds))){
+    stop("n.folds must be an integer")
+  }
+  
+  
+}
+>>>>>>> 0d695ffb887c7b60fe0951eca67e25e04666693e
