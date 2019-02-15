@@ -22,8 +22,16 @@
 #' zip.train[test.i, 1]
 #' 
 nn <- function(x.mat, y.vec, testx.vec, max.neighbors){
-  result.list <- .c("NN1toKmaxPredict_interface", as.double(x.mat), as.double(y.vec), as.double(testx.vec), 
-                    as.integer(nrow(x.mat)), as.integer(ncol(x.mat)), as.integer(max.neighbors), 
-                    predictions-double(max.neighbors), PACKAGE="nearestNeighbor")
+  result.list <- .C("NN1toKmaxPredict_interface", 
+                    as.integer(nrow(x.mat)), #' n_train_observations
+                    as.integer(nrow(x.mat)), #' n_test_observations
+                    as.integer(ncol(x.mat)), #' n_features
+                    as.integer(max.neighbors), #' max_neighbors
+                    as.double(x.mat), #' train_in_ptr
+                    as.double(y.vec), #' train_out_ptr
+                    as.double(testx.vec), #' test_in_ptr
+                    integer(max.neighbors), #' predictions_out_ptr
+                    PACKAGE="nearestNeighbor")
   result.list$predictions
 }
+
