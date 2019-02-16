@@ -18,7 +18,7 @@
 #' x <- zip.train[train.i, -1]
 #' y <- zip.train[train.i, 1]
 #' testx <- zip.train[test.i, -1]
-#' NN1toKmaxPredict(x ,y, testx , 3)
+#' NN1toKmaxPredict(x ,y, testx , as.integer(3))
 #' zip.train[test.i, 1]
 #' 
 
@@ -49,10 +49,33 @@ NN1toKmaxPredict <- function(x.mat, y.vec, testx.vec, max.neighbors){
                     as.double(x.mat), #' train_in_ptr
                     as.double(y.vec), #' train_out_ptr
                     as.double(testx.vec), #' test_in_ptr
-                    integer(max.neighbors), #' predictions_out_ptr
-                    PACKAGE="nearestNeighbor")
+                    predictions=double(max.neighbors), #' predictions_out_ptr
+                    PACKAGE="nearestNeighbors")
   result.list$predictions
 }
+
+
+#' cross validation of nearest neighbors algorithm
+#' 
+#'
+#' @param x.mat numeric train feature matrix [n x p]
+#' @param y.vec numeric train label vecotr [n], either all 0/1 for binary classificiation, or other real numbers for regression (multi-class classification not supported)
+#' @param max.neighbors scalar integer, max number of neighbors
+#' @param fold.vec vector of fold ID numbers, will be randonly assigned if not specified
+#' @param n.folds integer specifiying number of folds to perform
+#'
+#' @return list containing x.mat, y.vec, train.loss.mat, validation.loss.mat, train.loss.vec, validation.loss.vec, selected.neighbors, predict(testX.mat))
+#' @export 
+#'
+#' @examples
+#' data(zip.train, package="ElemStatLearn")
+#' i01 <- which(zip.train[,1] %in% c(0,1))
+#' train.i <- i01[1:5]
+#' test.i <- i01[6]
+#' x <- zip.train[train.i, -1]
+#' y <- zip.train[train.i, 1]
+#' NNLearnCV(x ,y)
+#' 
 
 NNLearnCV <-function(x.mat, y.vec, max.neighbors=as.integer(30), fold.vec=NULL, n.folds=as.integer(5)){
   # If folds is null, randomly assign fold values to each row between 1 and n.folds
@@ -70,7 +93,7 @@ NNLearnCV <-function(x.mat, y.vec, max.neighbors=as.integer(30), fold.vec=NULL, 
   if(!is.vector(y.vec)){
     stop("y.vec must be a vector")
   }
-  if(!length(y.vec)==nrow(x.mat)){
+  if(length(y.vec)!=nrow(x.mat)){
     stop("The length of y.vec must match the same number of rows as x.mat")
   }
   if(!is.integer(max.neighbors)){
@@ -80,5 +103,28 @@ NNLearnCV <-function(x.mat, y.vec, max.neighbors=as.integer(30), fold.vec=NULL, 
     stop("n.folds must be an integer")
   }
   
+  for(fold.i in seq_along(n.folds)){
+    is.train <- fold.vec != fold.i
+    is.validation <- fold.vec == fold.i
+    for(prediction.set.name in c("train", "validation")){
+      pred.mat <- NN1toKmaxPredict(x.mat[is.train,], y.vec[is.train], x.mat[is.validation,], max.neighbors)
+      loss.mat <- if(labels.all.01){
+        ifelse(pred.mat>0.5, 1, 0) != y.vec #zero-one loss for binary classification.
+      }else{
+        (pred.mat-y.vec)^2 #square loss for regression.
+      }
+      train.or.validation.loss.mat[, fold.i] <- colMeans(loss.mat)
+    }
+  }
   
+  result.list <- list(x.mat, 
+                      y.vec, #' training data.
+                      train.loss.mat, #' matrix of loss values for each fold and number of neighbors
+                      validation.loss.mat, #' matrix of loss values for each fold and number of neighbors
+                      train.loss.vec, #' vector with max.neighbors elements for training data
+                      validation.loss.vec, #' vector with max.neighbors elements for validation data
+                      selected.neighbors, #' number of neighbors selected by minimizing the mean validation loss
+                      predict(testX.mat)) #' a function that takes a matrix of inputs/features and returns a vector of predictions
+  result.list
+
 }
