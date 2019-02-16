@@ -103,28 +103,37 @@ NNLearnCV <-function(x.mat, y.vec, max.neighbors=as.integer(30), fold.vec=NULL, 
     stop("n.folds must be an integer")
   }
   
-  for(fold.i in seq_along(n.folds)){
+  for(fold.i in unique(n.folds)){
     is.train <- fold.vec != fold.i
     is.validation <- fold.vec == fold.i
     for(prediction.set.name in c("train", "validation")){
-      pred.mat <- NN1toKmaxPredict(x.mat[is.train,], y.vec[is.train], x.mat[is.validation,], max.neighbors)
-      loss.mat <- if(labels.all.01){
-        ifelse(pred.mat>0.5, 1, 0) != y.vec #zero-one loss for binary classification.
-      }else{
-        (pred.mat-y.vec)^2 #square loss for regression.
+      prediction.mat <- NN1toKmaxPredict(x.mat[is.train,], y.vec[is.train], x.mat[is.validation,], max.neighbors)
+      loss.mat <- if(y.vec[is.train] %in% c(0,1)){
+        ifelse(prediction.mat>0.5, 1, 0) != y.vec #zero-one loss for binary classification.
+      }
+      else {
+        (prediction.mat-y.vec)^2 #square loss for regression.
       }
       train.or.validation.loss.mat[, fold.i] <- colMeans(loss.mat)
     }
   }
   
+  train.loss.vec <- colMeans(train.loss.mat)
+  validation.loss.vec <- colMeans(validation.loss.mat)
+  selected.neighbors <- which.min(validation.loss.vec)
+  
+  predict=function(testX.mat){
+    
+  }
+  
   result.list <- list(x.mat, 
-                      y.vec, #' training data.
-                      train.loss.mat, #' matrix of loss values for each fold and number of neighbors
-                      validation.loss.mat, #' matrix of loss values for each fold and number of neighbors
-                      train.loss.vec, #' vector with max.neighbors elements for training data
-                      validation.loss.vec, #' vector with max.neighbors elements for validation data
-                      selected.neighbors, #' number of neighbors selected by minimizing the mean validation loss
-                      predict(testX.mat)) #' a function that takes a matrix of inputs/features and returns a vector of predictions
+                      y.vec=y.vec, #' training data.
+                      train.loss.mat=train.loss.mat, #' matrix of loss values for each fold and number of neighbors
+                      validation.loss.mat=validation.loss.mat, #' matrix of loss values for each fold and number of neighbors
+                      train.loss.vec=train.loss.vec, #' vectors with max.neighbors elements: mean loss over all folds for training data
+                      validation.loss.vec=validation.loss.vec, #' vectors with max.neighbors elements: mean loss over all folds for validation data
+                      selected.neighbors=selected.neighbors, #' number of neighbors selected by minimizing the mean validation loss
+                      predict(testX.mat))=predict #' a function that takes a matrix of inputs/features and returns a vector of predictions
   result.list
 
 }
