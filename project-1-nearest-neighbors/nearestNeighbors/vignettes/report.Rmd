@@ -1,0 +1,49 @@
+---
+title: "Report for project 1 on nearest neighbors"
+author: "Nicholas Anderson, Jacob Lemon, Megan Mikami "
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Report for project 1 on nearest neighbors}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r data}
+data.name.vec <- c(
+  "spam",
+  "SAheart",
+  "zip.train",
+  "prostate",
+  "ozone")
+data.list <- list()
+library(ElemStatLearn)
+for(data.name in data.name.vec){
+  data(list=data.name, package = "ElemStatLearn")
+  data.list[[data.name]] <- get(data.name)
+}
+str(data.list)
+
+    #ElemStatLearn::spam 2-class [4601, 57] output is last column (spam).
+    #ElemStatLearn::SAheart 2-class [462, 9] output is last column (chd).
+    #ElemStatLearn::zip.train: 10-class [7291, 256] output is first column. (ignore classes other than 0 and 1)
+    #ElemStatLearn::prostate [97 x 8] output is lpsa column, ignore train column.
+    #ElemStatLearn::ozone [111 x 3] output is first column (ozone).
+
+is.binary <- ElemStatLearn::zip.train[,1] %in% c(0,1)
+data.list <- list(
+  spam=list(
+    label.vec=ifelse(ElemStatLearn::spam$spam=="spam", 1, 0),
+    feature.mat=as.matrix(ElemStatLearn::spam[, -ncol(ElemStatLearn::spam)])),
+  zip.train=list(
+    label.vec=ElemStatLearn::zip.train[is.binary, 1],
+    feature.mat=ElemStatLearn::zip.train[is.binary, -1]
+  ))
+```

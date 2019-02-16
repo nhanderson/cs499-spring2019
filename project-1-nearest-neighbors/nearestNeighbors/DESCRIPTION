@@ -1,14 +1,18 @@
-Package: nearestNeighbors
-Type: Package
-Title: Compute Nearest neighbors using C++
-Version: 2019.1.31
-Author: Nicholas Anderson, Jacob Lemon, Megan Mikami
-Maintainer: Nicholas Anderson <nha4@nau.edu>
-Description: Efficient computation of nearest neighbors
-License: GPL-3
-Encoding: UTF-8
-LazyData: true
-LinkingTo: RcppEigen
-RoxygenNote: 6.1.1
-Imports: 
-Suggests:ElemStatLearn, testthat
+Package:nearestNeighbors
+Type:Package
+Title:Compute Nearest neighbors using C++
+Version:2019.1.31
+Author:Nicholas Anderson, Jacob Lemon, Megan Mikami
+Maintainer:Nicholas Anderson <nha4@nau.edu>
+Description:Efficient computation of nearest neighbors
+License:GPL-3
+Encoding:UTF-8
+LazyData:true
+LinkingTo:RcppEigen
+RoxygenNote:6.1.1
+Suggests:
+    ElemStatLearn,
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder:knitr
