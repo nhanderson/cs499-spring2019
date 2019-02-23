@@ -7,25 +7,25 @@ library('nearestNeighbors')
 base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
 cleanEx()
-nameEx("nn")
-### * nn
+nameEx("NN1toKmaxPredict")
+### * NN1toKmaxPredict
 
 flush(stderr()); flush(stdout())
 
-### Name: nn
+### Name: NN1toKmaxPredict
 ### Title: nearest neighbors algorithm
-### Aliases: nn
+### Aliases: NN1toKmaxPredict
 
 ### ** Examples
 
-data(zip.train, package-"ElemStatLearn")
+data(zip.train, package="ElemStatLearn")
 i01 <- which(zip.train[,1] %in% c(0,1))
 train.i <- i01[1:5]
 test.i <- i01[6]
 x <- zip.train[train.i, -1]
 y <- zip.train[train.i, 1]
 testx <- zip.train[test.i, -1]
-nn(x ,y, testx , 3)
+NN1toKmaxPredict(x ,y, testx , 3)
 zip.train[test.i, 1]
 
 

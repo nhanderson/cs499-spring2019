@@ -50,7 +50,7 @@ NN1toKmaxPredict <- function(x.mat, y.vec, testx.vec, max.neighbors){
                     as.double(y.vec), #' train_out_ptr
                     as.double(testx.vec), #' test_in_ptr
                     integer(max.neighbors), #' predictions_out_ptr
-                    PACKAGE="nearestNeighbor")
+                    PACKAGE="nearestNeighbors")
   result.list$predictions
 }
 

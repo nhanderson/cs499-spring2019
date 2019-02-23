@@ -26,13 +26,13 @@
 \item[LinkingTo]\AsIs{RcppEigen}
 \item[RoxygenNote]\AsIs{6.1.1}
 \item[Imports]\AsIs{}
-\item[Suggests]\AsIs{ElemStatLearn}
+\item[Suggests]\AsIs{ElemStatLearn, testthat}
 \item[NeedsCompilation]\AsIs{yes}
 \item[Archs]\AsIs{i386, x64}
 \end{description}
 \Rdcontents{\R{} topics documented:}
 \inputencoding{utf8}
-\HeaderA{nn}{nearest neighbors algorithm}{nn}
+\HeaderA{NN1toKmaxPredict}{nearest neighbors algorithm}{NN1toKmaxPredict}
 %
 \begin{Description}\relax
 R function that wraps the C++ code.
@@ -40,7 +40,7 @@ R function that wraps the C++ code.
 %
 \begin{Usage}
 \begin{verbatim}
-nn(x.mat, y.vec, testx.vec, max.neighbors)
+NN1toKmaxPredict(x.mat, y.vec, testx.vec, max.neighbors)
 \end{verbatim}
 \end{Usage}
 %
@@ -62,14 +62,14 @@ numeric vector of size man.neighbors, predictions from 1 to max.neighbors
 %
 \begin{Examples}
 \begin{ExampleCode}
-data(zip.train, package-"ElemStatLearn")
+data(zip.train, package="ElemStatLearn")
 i01 <- which(zip.train[,1] %in% c(0,1))
 train.i <- i01[1:5]
 test.i <- i01[6]
 x <- zip.train[train.i, -1]
 y <- zip.train[train.i, 1]
 testx <- zip.train[test.i, -1]
-nn(x ,y, testx , 3)
+NN1toKmaxPredict(x ,y, testx , 3)
 zip.train[test.i, 1]
 
 \end{ExampleCode}

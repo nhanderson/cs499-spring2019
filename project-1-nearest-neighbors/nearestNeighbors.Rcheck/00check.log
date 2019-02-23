@@ -42,15 +42,16 @@ Malformed Description field: should contain one or more complete sentences.
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
-* checking R code for possible problems ... NOTE
-nn: no visible global function definition for '.c'
-nn: no visible binding for global variable 'predictions'
-Undefined global functions or variables:
-  .c predictions
+* checking R code for possible problems ... OK
 * checking Rd files ... OK
 * checking Rd metadata ... OK
 * checking Rd cross-references ... OK
-* checking for missing documentation entries ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  'NNLearnCV'
+All user-level objects in a package should have documentation entries.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
 * checking for code/documentation mismatches ... OK
 * checking Rd \usage sections ... OK
 * checking Rd contents ... OK
@@ -68,39 +69,43 @@ Non-portable flags in variable 'PKG_CPPFLAGS':
 Running examples in 'nearestNeighbors-Ex.R' failed
 The error most likely occurred in:
 
-> ### Name: nn
+> ### Name: NN1toKmaxPredict
 > ### Title: nearest neighbors algorithm
-> ### Aliases: nn
+> ### Aliases: NN1toKmaxPredict
 > 
 > ### ** Examples
 > 
-> data(zip.train, package-"ElemStatLearn")
-Warning in data(zip.train, package - "ElemStatLearn") :
-  data set 'zip.train' not found
-Warning in data(zip.train, package - "ElemStatLearn") :
-  data set 'package - "ElemStatLearn"' not found
+> data(zip.train, package="ElemStatLearn")
 > i01 <- which(zip.train[,1] %in% c(0,1))
-Error in zip.train[, 1] %in% c(0, 1) : object 'zip.train' not found
-Calls: which -> %in%
+> train.i <- i01[1:5]
+> test.i <- i01[6]
+> x <- zip.train[train.i, -1]
+> y <- zip.train[train.i, 1]
+> testx <- zip.train[test.i, -1]
+> NN1toKmaxPredict(x ,y, testx , 3)
+Error in NN1toKmaxPredict(x, y, testx, 3) : 
+  max.neighbors must be an integer
 Execution halted
 ** running examples for arch 'x64' ... ERROR
 Running examples in 'nearestNeighbors-Ex.R' failed
 The error most likely occurred in:
 
-> ### Name: nn
+> ### Name: NN1toKmaxPredict
 > ### Title: nearest neighbors algorithm
-> ### Aliases: nn
+> ### Aliases: NN1toKmaxPredict
 > 
 > ### ** Examples
 > 
-> data(zip.train, package-"ElemStatLearn")
-Warning in data(zip.train, package - "ElemStatLearn") :
-  data set 'zip.train' not found
-Warning in data(zip.train, package - "ElemStatLearn") :
-  data set 'package - "ElemStatLearn"' not found
+> data(zip.train, package="ElemStatLearn")
 > i01 <- which(zip.train[,1] %in% c(0,1))
-Error in zip.train[, 1] %in% c(0, 1) : object 'zip.train' not found
-Calls: which -> %in%
+> train.i <- i01[1:5]
+> test.i <- i01[6]
+> x <- zip.train[train.i, -1]
+> y <- zip.train[train.i, 1]
+> testx <- zip.train[test.i, -1]
+> NN1toKmaxPredict(x ,y, testx , 3)
+Error in NN1toKmaxPredict(x, y, testx, 3) : 
+  max.neighbors must be an integer
 Execution halted
 * checking PDF version of manual ... WARNING
 LaTeX errors when creating PDF version.
@@ -108,4 +113,4 @@ This typically indicates Rd problems.
 * checking PDF version of manual without hyperrefs or index ... ERROR
 Re-running with no redirection of stdout/stderr.
 * DONE
-Status: 3 ERRORs, 2 WARNINGs, 2 NOTEs
+Status: 3 ERRORs, 3 WARNINGs, 1 NOTE
