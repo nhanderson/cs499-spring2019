@@ -1,3 +1,17 @@
+#' scaling input matix
+Scaling <- function(X.mat){
+  if( !is.matrix(X.mat)){
+    stop("X.mat must be a matrix")
+  }
+  .colMeans(X.mat, m, n, na.rm = TRUE);
+  scale( X.mat, center = m,scale = TURE );
+  
+}
+
+
+
+
+
 LMSquareLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
   if(!is.matrix(X.mat)){
     stop("X.mat must be a matrix")

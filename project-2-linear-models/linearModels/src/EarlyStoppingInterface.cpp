@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include "EarlyStopping.h"
 #include <R.h> // for error 
 #include <R_ext/Rdynload.h>
@@ -22,12 +21,13 @@ if( status != 0 ){
     else if( status == INVALID_STEP_SIZE ){
       error("Invalid step size number");
     } 
+  }
 }
 
 R_CMethodDef cMethods[] = {
   {"LMSquareLossInterations_interface", (DL_FUNC) &LMSquareLossInterations_interface, 7 },
   {NULL, NULL, 0}
-}
+};
 
 
 extern "C" {

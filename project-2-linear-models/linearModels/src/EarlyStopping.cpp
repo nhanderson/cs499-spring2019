@@ -1,7 +1,6 @@
-#include <Rcpp.h>
+
 #include "EarlyStopping.h"
 #include <Eigen/Dense>
-using namespace Rcpp;
 
 int LMSquareLossInterations( const int n_train, 
                              const int n_test,
@@ -20,13 +19,15 @@ int LMSquareLossInterations( const int n_train,
     return INVALID_STEP_SIZE;
   }
   
+  //scaling input
+  
   Eigen::Map< Eigen::MatrixXd > feature_mat((double*) feature_ptr, n_train, n_features); // feature matrix (n_train x f_features)
-  Eigen::Map< Eigen::VectorXd > label_vec((double*) label_ptr, n_train); // label vector (n_trainn x 1)
-  Eigen::Map< Eigen::MatrixXd > test_in_mat((double*) test_in_ptr, n_test_observations, n_features); // matrix test data input
+  Eigen::Map< Eigen::VectorXd > label_vec((double*) label_ptr, n_train); // label vector (n_train x 1)
+  // Eigen::Map< Eigen::MatrixXd > test_in_mat((double*) test_in_ptr, n_test_observations, n_features); // matrix test data input
   
   double total = 0.0;
-  for (int i = 0, i < max_iterations, i++ ){
-    total += label_vec[i] - feature_mat[i]);
+  for (int i = 0; i < max_iterations; i++ ){
+    total += label_vec(i) - feature_mat(i);
   }
   
   double meanloss = total/max_iterations;
