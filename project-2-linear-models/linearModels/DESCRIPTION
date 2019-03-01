@@ -1,6 +1,6 @@
 Package: linearModels
 Type: Package
-Title: 
+Title: Linear models for regression and binary classification.
 Version: 2019.2.22
 Author: Nicholas Anderson, Jacob Lemon, Megan Mikami
 Maintainer: Nicholas Anderson <nha4@nau.edu>
