@@ -36,9 +36,9 @@ LMSquareLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
               as.integer(step.size),   #' step_size
               as.double(X.mat),  #' train_input_ptr
               as.double(y.vec),  #' train_output_ptr
-              predictions = integer(max.iterations)  #' predictions_output_ptr
+              weight_mat = double(ncol(X.mat) * max.iterations)  #' predictions_output_ptr
               )
-  result.list$predictions
+  matrix(result.list$weight_mat, ncol(X.mat), max_iterations)
 }
 
 
