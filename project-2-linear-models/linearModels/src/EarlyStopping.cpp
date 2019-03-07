@@ -2,7 +2,7 @@
 #include "EarlyStopping.h"
 #include <Eigen/Dense>
 
-int LMSquareLossInterations( const int n_train, 
+double LMSquareLossInterations( const int n_train, 
                              const int n_test,
                              const int n_features,
                              const int max_iterations,
