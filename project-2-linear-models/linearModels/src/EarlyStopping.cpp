@@ -2,12 +2,7 @@
 #include "EarlyStopping.h"
 #include <Eigen/Dense>
 
-<<<<<<< HEAD
-double LMSquareLossInterations( const int n_train, 
-                             const int n_test,
-=======
 int LMSquareLossInterations( const int n_train, 
->>>>>>> 19f78cf84ba38cb0881768b846214220d30fad92
                              const int n_features,
                              const int max_iterations,
                              const int step_size,
@@ -36,4 +31,24 @@ int LMSquareLossInterations( const int n_train,
   
   double meanloss = total/max_iterations;
   
+}
+
+int LMLogisticLoss( const int n_train, 
+                    const int n_features,
+                    const double *feature_ptr, // n_train x n_features
+                    const double *label_ptr, // n_train x 1
+                    const double *weight_ptr, // n_features x 1
+                    double *output_ptr )// n_features x 1
+{
+  Eigen::Map< Eigen::MatrixXd > feature_mat((double*) feature_ptr, n_train, n_features); // feature matrix (n_train x f_features)
+  Eigen::Map< Eigen::VectorXd > label_vec((double*) label_ptr, n_train); // label vector (n_train x 1)
+  Eigen::Map< Eigen::VectorXd > w_vec((double*) weight_ptr, n_train); // label vector (n_train x 1)
+  Eigen::Map< Eigen::VectorXd > output_vec((double*) output_ptr, n_train); // label vector (n_train x 1)
+  
+  for(int i=0; i < n_train; i++){
+    output_vec += exp(-label_vec(i) * w_vec.transpose() * feature_mat.col(i)) / 
+      (1 + exp(-label_vec(i) * w_vec.transpose() * feature_mat.col(i))) * 
+      (-label_vec(i) * feature_mat.col(i));
+    }
+  return 0;
 }

@@ -24,11 +24,29 @@ if( status != 0 ){
   }
 }
 
+void LMLogisticLoss_interface( const int *n_train, 
+                               const int *n_features,
+                               const double *feature_ptr,
+                               const double *label_ptr,
+                               const double *weight_ptr,
+                               double *output_ptr ){
+  
+int status = LMLogisticLoss(*n_train,
+                            *n_features, 
+                            feature_ptr,
+                            label_ptr,
+                            weight_ptr, 
+                            output_ptr);
+if( status != 0 ){
+  error("Unknown error in LMLogisticLoss");
+  }
+}
+
 R_CMethodDef cMethods[] = {
   {"LMSquareLossInterations_interface", (DL_FUNC) &LMSquareLossInterations_interface, 7 },
+  {"LMLogisticLoss_interface", (DL_FUNC) &LMLogisticLoss_interface, 6 },
   {NULL, NULL, 0}
 };
-
 
 extern "C" {
   void R_init_EarlyStopping(DllInfo *info){
