@@ -2,12 +2,10 @@
 #include "EarlyStopping.h"
 #include <Eigen/Dense>
 
-<<<<<<< HEAD
 double LMSquareLossInterations( const int n_train, 
                              const int n_test,
-=======
+
 int LMSquareLossInterations( const int n_train, 
->>>>>>> 19f78cf84ba38cb0881768b846214220d30fad92
                              const int n_features,
                              const int max_iterations,
                              const int step_size,
@@ -22,8 +20,6 @@ int LMSquareLossInterations( const int n_train,
   if( step_size < 1 ){
     return INVALID_STEP_SIZE;
   }
-  
-  //scaling input
   
   Eigen::Map< Eigen::MatrixXd > feature_mat((double*) feature_ptr, n_train, n_features); // feature matrix (n_train x f_features)
   Eigen::Map< Eigen::VectorXd > label_vec((double*) label_ptr, n_train); // label vector (n_train x 1)
