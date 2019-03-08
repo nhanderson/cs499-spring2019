@@ -24,6 +24,15 @@ if( status != 0 ){
   }
 }
 
+void LMLogisticLossIterations_interface(
+  
+){
+  
+  
+  
+  
+}
+
 R_CMethodDef cMethods[] = {
   {"LMSquareLossInterations_interface", (DL_FUNC) &LMSquareLossInterations_interface, 7 },
   {NULL, NULL, 0}
@@ -31,7 +40,7 @@ R_CMethodDef cMethods[] = {
 
 
 extern "C" {
-  void R_init_EarlyStopping(DllInfo *info){
+  void R_init_linearModels(DllInfo *info){
     R_registerRoutines(info, cMethods, NULL, NULL, NULL);
     R_useDynamicSymbols(info, FALSE);
   }
