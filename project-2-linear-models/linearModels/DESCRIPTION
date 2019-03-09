@@ -4,7 +4,7 @@ Title: Linear models for regression and binary classification.
 Version: 2019.2.22
 Author: Nicholas Anderson, Jacob Lemon, Megan Mikami
 Maintainer: Nicholas Anderson <nha4@nau.edu>
-Description: 
+Description: Linear models with early stopping regularization and with L2 regularization
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
