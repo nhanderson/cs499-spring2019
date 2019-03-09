@@ -49,7 +49,7 @@ R_CMethodDef cMethods[] = {
 };
 
 extern "C" {
-  void R_init_EarlyStopping(DllInfo *info){
+  void R_init_linearModels(DllInfo *info){
     R_registerRoutines(info, cMethods, NULL, NULL, NULL);
     R_useDynamicSymbols(info, FALSE);
   }

@@ -18,7 +18,6 @@
 #' x <- zip.train[train.i, -1]
 #' y <- zip.train[train.i, 1]
 #' testx <- zip.train[test.i, -1]
-#' NN1toKmaxPredict(x ,y, testx , as.integer(3))
 #' zip.train[test.i, 1]
 #' 
 
@@ -39,19 +38,19 @@ LMSquareLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
     stop("step.size must be an integer")
   }
   
-   <- scale( X.mat, center = FALSE, scale = apply( X.mat, 2, na.rm = TRUE) )
+  scaledX.mat <- scale( X.mat, center = FALSE, scale = apply( X.mat, 2, na.rm = TRUE) )
   
   result<- .C("LMSquareLossIterations_interface", 
               as.integer(nrow(X.mat)),  #' n_train
               as.integer(nrow(X.mat)),  #' n_test
               as.integer(ncol(X.mat)),  #' n_features
-              as.integer(max.interations),  #' max_iterations
+              as.integer(max.iterations),  #' max_iterations
               as.integer(step.size),   #' step_size
               as.double(scaledX.mat),  #' train_input_ptr
               as.double(y.vec),  #' train_output_ptr
               weight_mat = double(ncol(X.mat) * max.iterations)  #' predictions_output_ptr
               )
-  weight.mat <- matrix(result.list$weight_mat, ncol(X.mat), max_iterations)
+  weight.mat <- matrix(result$weight_mat, ncol(X.mat), max_iterations)
   unscaled.weight.mat <- unscale( weight.mat, X.mat )
 }
 
@@ -68,16 +67,10 @@ LMSquareLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
 #' @export 
 #'
 #' @examples
-#' data(SAheart, package="ElemStatLearn")
-#' i01 <- which(SAheart[,1] %in% c(0,1))
-#' train.i <- i01[1:5]
-#' test.i <- i01[6]
-#' x <- SAheart[train.i, -1]
-#' y <- SAheart[train.i, 1]
-#' iter <- 3
-#' step <- 0.1
-#' LMLogisticLossIterations(x ,y, iter , step)
-#' 
+#' data(spam, package = "ElemStatLearn")
+#' X.mat <- as.matrix(spam[, 1:57])
+#' y.vec <- ifelse(spam$spam=="spam", 1, 0)
+#' LMLogisticLossIterations(X.mat, y.vec, as.integer(3), 0.1)
 
 LMLogisticLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
   if(!is.matrix(X.mat)){
@@ -100,7 +93,7 @@ LMLogisticLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
   scaled.X.mat  <- scale(X.mat)
   
   # Function
-  scaled.W.mat <- matrix(0, ncol(X.mat), max.iterations)
+  scaled.W.mat <- matrix(0, nrow(X.mat), max.iterations)
   
   result <- .C("LMLogisticLoss_interface",
                as.integer(nrow(X.mat)),  #' n_train
@@ -110,7 +103,7 @@ LMLogisticLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
                as.double(as.vector(matrix(0,nrow=ncol(X.mat)))),  #' weight_ptr
                weight_mat = double(ncol(X.mat)))   #' output_ptr
   
-  scaled.W.loss.vec <- result.list$weight_mat
+  scaled.W.loss.vec <- result$weight_mat
   scaled.W.mat[, 1] <- as.vector(matrix(0,nrow=ncol(X.mat))) - step.size * scaled.W.loss.vec
   
   for(iteration in seq(2, max.iterations, by=1)){
@@ -123,12 +116,12 @@ LMLogisticLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
                  as.double(scaled.W.mat[, iteration-1]),  #' weight_ptr
                  weight_mat = double(ncol(X.mat))) #' output_ptr
     
-    scaled.W.loss.vec <- result.list$weight_mat
+    scaled.W.loss.vec <- result$weight_mat
     scaled.W.mat[, iteration] <- scaled.W.mat[, iteration-1] - step.size * scaled.W.loss.vec
   }
   
-  W.mat <- unscale( scaled.W.mat, X.mat )
-  return(W.mat)
+  # W.mat <- unscale( scaled.W.mat, X.mat )
+  return(scaled.W.mat)
 }
 
 
@@ -149,15 +142,6 @@ LMLogisticLossIterations <- function(X.mat, y.vec, max.iterations, step.size){
 #' @export 
 #'
 #' @examples
-#' data(zip.train, package="ElemStatLearn")
-#' i01 <- which(zip.train[,1] %in% c(0,1))
-#' train.i <- i01[1:5]
-#' test.i <- i01[6]
-#' x <- zip.train[train.i, -1]
-#' y <- zip.train[train.i, 1]
-#' testx <- zip.train[test.i, -1]
-#' LMLogisticLossIterations(x ,y, testx , as.integer(3))
-#' zip.train[test.i, 1]
 #' 
 LMLogisticLossEarlyStoppingCV <- function(X.mat, y.vec, fold.vec, max.iterations){
   if(!is.matrix(X.mat)){

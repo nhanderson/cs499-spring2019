@@ -4,7 +4,7 @@ Title: Linear models for regression and binary classification.
 Version: 2019.2.22
 Author: Nicholas Anderson, Jacob Lemon, Megan Mikami
 Maintainer: Nicholas Anderson <nha4@nau.edu>
-Description: 
+Description: An R package that implements gradient descent algorithms for linear models
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

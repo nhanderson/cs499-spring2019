@@ -45,10 +45,10 @@ int LMLogisticLoss( const int n_train,
   Eigen::Map< Eigen::VectorXd > w_vec((double*) weight_ptr, n_train); // label vector (n_train x 1)
   Eigen::Map< Eigen::VectorXd > output_vec((double*) output_ptr, n_train); // label vector (n_train x 1)
   
-  for(int i=0; i < n_train; i++){
-    output_vec += exp(-label_vec(i) * w_vec.transpose() * feature_mat.col(i)) / 
-      (1 + exp(-label_vec(i) * w_vec.transpose() * feature_mat.col(i))) * 
+  for(int i=0; i < n_features; i++){
+     output_vec = (-1 * label_vec(i)) * (w_vec.transpose()* feature_mat.col(i)) /
+       (1 + exp(-label_vec(i) * w_vec.transpose() * feature_mat.col(i)));// *
       (-label_vec(i) * feature_mat.col(i));
-    }
+   }
   return 0;
 }
