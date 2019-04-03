@@ -1,0 +1,20 @@
+* using log directory 'C:/Users/Megan Miyuki Mikami/Desktop/Megan Mikami/NAU/SPRING 2019/CS 499/Project1/cs499-spring2019/project-2-linear-models/linearModels.Rcheck'
+* using R version 3.5.2 (2018-12-20)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file 'linearModels/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'linearModels' version '2019.2.22'
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking whether package 'linearModels' can be installed ... ERROR
+Installation failed.
+See 'C:/Users/Megan Miyuki Mikami/Desktop/Megan Mikami/NAU/SPRING 2019/CS 499/Project1/cs499-spring2019/project-2-linear-models/linearModels.Rcheck/00install.out' for details.
+* DONE
+Status: 1 ERROR

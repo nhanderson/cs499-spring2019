@@ -11,6 +11,6 @@ LazyData: true
 LinkingTo: RcppEigen
 RoxygenNote: 6.1.1
 Suggests:
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr
+VignetteBuilder:
+NeedsCompilation: yes
+Packaged: 2019-03-01 04:37:49 UTC; Megan Miyuki Mikami

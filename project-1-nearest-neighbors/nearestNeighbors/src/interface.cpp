@@ -3,9 +3,14 @@
 #include <R_ext/Rdynload.h> // for registration
 
 
-void NN1toKmaxPredict_interface( int *n_train_observations_ptr, int *n_test_observations_ptr, int *n_features_ptr, 
-                                     int *max_neighbors_ptr, double *train_in_ptr, double *train_out_ptr, 
-                                     double *test_in_ptr, double *predictions_out_ptr){
+void NN1toKmaxPredict_interface( int *n_train_observations_ptr, 
+                                 int *n_test_observations_ptr, 
+                                 int *n_features_ptr, 
+                                 int *max_neighbors_ptr, 
+                                 double *train_in_ptr, 
+                                 double *train_out_ptr, 
+                                 double *test_in_ptr, 
+                                 double *predictions_out_ptr){
   
 int status = NN1toKmaxPredict(*n_train_observations_ptr, *n_test_observations_ptr, *n_features_ptr, 
                                 *max_neighbors_ptr, train_in_ptr, train_out_ptr, 
@@ -25,7 +30,7 @@ if( status != 0 ){
     error("Invalid Max Number of Neighbors");
   }
 } 
-}
+
 
 R_CMethodDef cMethods[] = {
   {"NN1toKmaxPredict_interface", (DL_FUNC) &NN1toKmaxPredict_interface, 8 },

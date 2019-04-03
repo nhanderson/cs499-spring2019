@@ -1,0 +1,23 @@
+* installing *source* package 'linearModels' ...
+** libs
+
+*** arch - i386
+C:/Rtools/mingw_32/bin/g++  -I"C:/PROGRA~1/R/R-35~1.2/include" -DNDEBUG  -I"C:/Users/Megan Miyuki Mikami/Documents/R/win-library/3.5/RcppEigen/include"        -O2 -Wall  -mtune=generic -c EarlyStopping.cpp -o EarlyStopping.o
+EarlyStopping.cpp: In function 'int LMSquareLossInterations(int, int, int, int, int, const double*, const double*, double*)':
+EarlyStopping.cpp:33:10: warning: unused variable 'meanloss' [-Wunused-variable]
+   double meanloss = total/max_iterations;
+          ^
+EarlyStopping.cpp:35:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+C:/Rtools/mingw_32/bin/g++  -I"C:/PROGRA~1/R/R-35~1.2/include" -DNDEBUG  -I"C:/Users/Megan Miyuki Mikami/Documents/R/win-library/3.5/RcppEigen/include"        -O2 -Wall  -mtune=generic -c EarlyStoppingInterface.cpp -o EarlyStoppingInterface.o
+C:/Rtools/mingw_32/bin/g++ -shared -s -static-libgcc -o linearModels.dll tmp.def EarlyStopping.o EarlyStoppingInterface.o -LC:/PROGRA~1/R/R-35~1.2/bin/i386 -lR
+EarlyStoppingInterface.o:EarlyStoppingInterface.cpp:(.text+0x43): undefined reference to `LMSquareLossInterations(int, int, int, int, double const*, double const*, double*)'
+collect2.exe: error: ld returned 1 exit status
+Warning messages:
+1: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+2: In FUN(X[[i]], ...) : this requires 'nm' to be on the PATH
+no DLL was created
+ERROR: compilation failed for package 'linearModels'
+* removing 'C:/Users/MEGANM~1/Desktop/MEGANM~1/NAU/SPRING~3/CS499~1/Project1/CS499-~1/PROJEC~2/LINEAR~1.RCH/linearModels'
+In R CMD INSTALL

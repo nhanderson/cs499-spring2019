@@ -10,5 +10,9 @@ Encoding: UTF-8
 LazyData: true
 LinkingTo: RcppEigen
 RoxygenNote: 6.1.1
-Imports: 
-Suggests:ElemStatLearn, testthat
+Suggests:
+    ElemStatLearn,
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

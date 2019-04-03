@@ -1,0 +1,113 @@
+---
+title: "Coding project 2: linear models for regression and binary classification."
+author: "Nicholas Anderson, Jacob Lemon, Megan Mikami"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r}
+data(spam, package="ElemStatLearn")
+data(SAheart, package="ElemStatLearn")
+data(zip.train, package="ElemStatLearn")
+data(prostate, package="ElemStatLearn")
+data(ozone, package="ElemStatLearn")
+
+is.01 <- zip.train[,1] %in% c(0,1)
+
+data.list <- list(
+  spam=list(
+    features=as.matrix(spam[, 1:57]),
+    labels=ifelse(spam$spam=="spam", 1, 0)),
+  SAheart=list(
+    features=as.matrix(SAheart[,1:9]),
+    labels=ifelse(SAheart$SAheart=="SAheart", 1, 0)),
+  zip.train=list(
+    features=zip.train[is.01, -1],
+    labels=as.integer(zip.train[is.01, 1]))
+  )
+
+n.folds <- 5
+results.list <- list()
+mean.loss.list <- list()
+```
+
+## Data set 1: spam
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 2: SAheart
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 3: zip.train
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 4: prostate
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 5: ozone
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
