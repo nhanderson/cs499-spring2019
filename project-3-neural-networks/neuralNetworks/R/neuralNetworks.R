@@ -48,13 +48,10 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   if(!is.matrix(X.mat)){
     stop("X.mat must be a matrix")
   }
-  if(!is.vector(y.vec)){
+  if(!is.numeric(y.vec)){
     stop("y.vec must be a vector")
   }
-  if(!is.integer(max.iterations)){
-    stop("max.neighbors must be an integer")
-  }
-  if(!(is.integer(max.iterations) && max.iterations>1)){
+  if(!(is.integer(max.iterations) && max.iterations>1) && length(max.iterations) == 1 ){
     stop("max.iterations must be an integer greater than 1")
   }
   if(!is.integer(step.size)){
@@ -63,8 +60,8 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   if( !is.integer(n.hidden.units) && n.hidden.units > 0){
     stop("n.hidden.units must be an integer greater than 0")
   }
-  if(!is.vector(is.train)){
-    stop("is.train must be a vector")
+  if(!is.logical(is.train)){
+    stop("is.train must be a logical vector")
   }
   
   #' check if y.vec is binary or not
@@ -83,10 +80,9 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   #' 
   #' 
   #' 
-
   
   #' loop through actual train data set
-  for(n in c(1:ncol(is.train))){
+  for(n in c(1:max.iterations)){
     A <- X.scaled.mat %*% V   #' 1
     sigmoid <- function(a){  
       1/(1+exp(-a))
@@ -99,11 +95,14 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     grad.w <- t(Z) %*% delta.w /nrow(X.scaled.mat)        #' 6
     grad.V <- t(X.scaled.mat) %*% delta.v / nrow(X.scaled.mat)    #' 7
     
+    pred.mat$prediction<-
     #' while validation loss is decreasing --> do above loop on validation set?
     #' take a step
     w <- w - step.size * grad.w
     V <- V - step.size * grad.V
-    sum(abs(c(grad.w, as.numeric(grad.V))))   #' divide by ncol(is.train) to get the average
+    pred<-sum(abs(c(grad.w, as.numeric(grad.V))))/max.iterations   #' divide by max.iterations to get the average
+    pred.mat$prediction<-pred
+    
   }
   
   
