@@ -63,23 +63,14 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   if(!is.logical(is.train)){
     stop("is.train must be a logical vector")
   }
-  
-  #' check if y.vec is binary or not
-  #'
-  #'
-  #'
-  #'
 
   X.scaled.mat <- scale(X.mat)
   V.mat <- matrix(rnorm(ncol(X.scaled.mat)*n.hidden.units), ncol(X.scaled.mat), n.hidden.units)
   w.vec <- rnorm(n.hidden.units)
   
+  #' CHECK THIS
   #' split is.train into train and validation set
-  #' 
-  #' 
-  #' 
-  #' 
-  #' 
+  X.train <- X.mat[is.train,]
   
   #' loop through actual train data set
   for(n in c(1:max.iterations)){
@@ -89,19 +80,36 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     }
     Z <- sigmoid(A)           #' 2
     b <- as.numeric(Z %*% w)  #' 3
-    delta.w <- b - y.vec      #' 4
+    
+    #' DOUBLE CHECK THIS
+    if( all(y.vec %in% c(0,1))){
+      Y.tidle <- Diag(y.vec)
+      #' IS S[] THE SAME AS THE SIGMOID FUNCTION DEFINED ABOVE?
+      #' MATRIX MULTIPLICATION?
+      delta.w <- -Y.tilde %*% sigmoid(-Y.tilde %*% b) 
+    }
+    else {
+      delta.w <- b - y.vec      #' 4
+    }
+    
     A.deriv <- Z * (1-Z)    
     delta.v <- diag(delta.w) %*% A.deriv %*% diag(w)      #' 5
+    
     grad.w <- t(Z) %*% delta.w /nrow(X.scaled.mat)        #' 6
     grad.V <- t(X.scaled.mat) %*% delta.v / nrow(X.scaled.mat)    #' 7
     
+    #' TAKE THIS OUT?
     pred.mat$prediction<-
     #' while validation loss is decreasing --> do above loop on validation set?
+
     #' take a step
+    #' THE TAKING STEP PART IS WITHIN THE FOR LOOP? OR OUTSIDE?
     w <- w - step.size * grad.w
     V <- V - step.size * grad.V
     pred<-sum(abs(c(grad.w, as.numeric(grad.V))))/max.iterations   #' divide by max.iterations to get the average
-    pred.mat$prediction<-pred
+    
+    #' WHERE IS THE PREDICTION.VECTOR COMING FROM?
+    pred.mat[, column.index] <- predicion.vector
     
   }
   
