@@ -71,6 +71,7 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   #' CHECK THIS
   #' split is.train into train and validation set
   X.train <- X.mat[is.train,]
+  y.train <- y.vec[is.train]
   
   #' loop through actual train data set
   for(n in c(1:max.iterations)){
@@ -83,10 +84,9 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     
     #' DOUBLE CHECK THIS
     if( all(y.vec %in% c(0,1))){
-      Y.tidle <- Diag(y.vec)
       #' IS S[] THE SAME AS THE SIGMOID FUNCTION DEFINED ABOVE?
       #' MATRIX MULTIPLICATION?
-      delta.w <- -Y.tilde %*% sigmoid(-Y.tilde %*% b) 
+      delta.w <- -y.train %*% sigmoid(-y.train %*% b) 
     }
     else {
       delta.w <- b - y.vec      #' 4
@@ -97,17 +97,14 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     
     grad.w <- t(Z) %*% delta.w /nrow(X.scaled.mat)        #' 6
     grad.V <- t(X.scaled.mat) %*% delta.v / nrow(X.scaled.mat)    #' 7
-    
-    #' TAKE THIS OUT?
-    pred.mat$prediction<-
-    #' while validation loss is decreasing --> do above loop on validation set?
 
     #' take a step
-    #' THE TAKING STEP PART IS WITHIN THE FOR LOOP? OR OUTSIDE?
     w <- w - step.size * grad.w
     V <- V - step.size * grad.V
-    pred<-sum(abs(c(grad.w, as.numeric(grad.V))))/max.iterations   #' divide by max.iterations to get the average
     
+    V.orig <- V/attr(X.scaled.mat, "scaled:scale")
+    b.orig <- -t(V/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
+  
     #' WHERE IS THE PREDICTION.VECTOR COMING FROM?
     pred.mat[, column.index] <- predicion.vector
     
