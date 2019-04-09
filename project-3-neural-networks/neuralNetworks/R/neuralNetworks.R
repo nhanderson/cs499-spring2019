@@ -68,11 +68,16 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   V.mat <- matrix(rnorm(ncol(X.scaled.mat)*n.hidden.units), ncol(X.scaled.mat), n.hidden.units)
   w.vec <- rnorm(n.hidden.units)
   
-  #' CHECK THIS
   #' split is.train into train and validation set
   X.train <- X.mat[is.train,]
   y.train <- y.vec[is.train]
   
+  #' convert binary vector into scaled y.tilde in {-1,1}
+  is.binary <- all(y.vec %in% c(0,1))
+  if( is.binary ){
+    y.tilde <- ifelse(y.vec == 1, 1, -1)
+  }
+
   #' loop through actual train data set
   for(n in c(1:max.iterations)){
     A <- X.scaled.mat %*% V   #' 1
@@ -82,11 +87,8 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     Z <- sigmoid(A)           #' 2
     b <- as.numeric(Z %*% w)  #' 3
     
-    #' DOUBLE CHECK THIS
-    if( all(y.vec %in% c(0,1))){
-      #' IS S[] THE SAME AS THE SIGMOID FUNCTION DEFINED ABOVE?
-      #' MATRIX MULTIPLICATION?
-      delta.w <- -y.train %*% sigmoid(-y.train %*% b) 
+    if( is.binary ){
+      delta.w <- -y.tilde %*% sigmoid(-y.tilde %*% b) 
     }
     else {
       delta.w <- b - y.vec      #' 4
@@ -102,19 +104,25 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     w <- w - step.size * grad.w
     V <- V - step.size * grad.V
     
+    #' unscale predictions
     V.orig <- V/attr(X.scaled.mat, "scaled:scale")
     b.orig <- -t(V/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
   
-    #' WHERE IS THE PREDICTION.VECTOR COMING FROM?
-    pred.mat[, column.index] <- predicion.vector
+    #' prediction function that takes an unsclaed X matrix
+    V.with.intercept <- rbind(intercept=as.numeric(b.orig), V.orig)
+    predict <- function(X.unscaled){
+      A.mat <- cbind(1, X.unscaled) %*% V.with.intercept
+      sigmoid(A.mat) %*% w
+    }
+    
     
   }
   
+  #' WHERE IS THE PREDICTION.VECTOR COMING FROM?
+  pred.mat[, column.index] <- predicion.vector
   
   #' not sure what to do with pred.mat and predict(testX.mat)
-  return (list(pred.mat, V.mat, w.vec, predict(testX.mat)))
-  
-  
+  return (list(pred.mat, V.mat, w.vec, predict))
 }
 
 #' NNetEarlyStoppingCV
