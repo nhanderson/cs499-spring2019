@@ -104,24 +104,23 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     w <- w - step.size * grad.w
     V <- V - step.size * grad.V
     
-    #' unscale predictions
-    V.orig <- V/attr(X.scaled.mat, "scaled:scale")
-    b.orig <- -t(V/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
-  
-    #' prediction function that takes an unsclaed X matrix
-    V.with.intercept <- rbind(intercept=as.numeric(b.orig), V.orig)
-    predict <- function(X.unscaled){
-      A.mat <- cbind(1, X.unscaled) %*% V.with.intercept
-      sigmoid(A.mat) %*% w
-    }
-    
-    
+    prediction <- t(w.vec) %*% sigmoid(t(V.mat %*% X.train))
+    prediction.vector <- c(prediction.vector, prediction)
   }
   
-  #' WHERE IS THE PREDICTION.VECTOR COMING FROM?
-  pred.mat[, column.index] <- predicion.vector
+  pred.mat[, prediction.index] <- prediction.vector
   
-  #' not sure what to do with pred.mat and predict(testX.mat)
+  #' unscale predictions
+  V.orig <- V.mat/attr(X.scaled.mat, "scaled:scale")
+  b.orig <- -t(V.mat/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
+  
+  #' prediction function that takes an unsclaed X matrix
+  V.with.intercept <- rbind(intercept=as.numeric(b.orig), V.orig)
+  predict <- function(X.unscaled){
+    A.mat <- cbind(1, X.unscaled) %*% V.with.intercept
+    sigmoid(A.mat) %*% w
+  }
+  
   return (list(pred.mat, V.mat, w.vec, predict))
 }
 
