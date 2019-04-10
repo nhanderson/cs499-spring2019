@@ -1,14 +1,15 @@
 Package: neuralNetworks
-Type: Package
 Title: Neural networks for regression and binary classification.
 Version: 2019.4.02
 Author: Nicholas Anderson, Megan Mikami
 Maintainer: Nicholas Anderson <nha4@nau.edu>
-Description: An R package that implements gradient descent algorithms for linear models
+Description:
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-LinkingTo: 
 RoxygenNote: 6.1.1
-Suggests:
-VignetteBuilder: 
+Type: Package
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

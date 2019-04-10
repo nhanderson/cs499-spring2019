@@ -1,0 +1,105 @@
+---
+title: "Report for Project 3 on Neural Networks"
+author: "Nicholas Anderson, Megan Mikami"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{report}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(neuralNetworks)
+
+data.name.vec <- c(
+  "spam",
+  "SAheart",
+  "zip.train",
+  "prostate",
+  "ozone")
+data.list <- list()
+library(ElemStatLearn)
+for(data.name in data.name.vec){
+  data(list=data.name, package = "ElemStatLearn")
+  data.list[[data.name]] <- get(data.name)
+}
+str(data.list)
+```
+
+## Data set 1: spam
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 2: SAheart
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 3: zip.train
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 4: prostate
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 5: ozone
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
