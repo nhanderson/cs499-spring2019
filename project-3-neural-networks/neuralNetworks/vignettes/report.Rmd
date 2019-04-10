@@ -1,0 +1,35 @@
+---
+title: "Report for Project 3 on Neural Networks"
+author: "Nicholas Anderson, Megan Mikami"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{report}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(neuralNetworks)
+
+data.name.vec <- c(
+  "spam",
+  "SAheart",
+  "zip.train",
+  "prostate",
+  "ozone")
+data.list <- list()
+library(ElemStatLearn)
+for(data.name in data.name.vec){
+  data(list=data.name, package = "ElemStatLearn")
+  data.list[[data.name]] <- get(data.name)
+}
+str(data.list)
+```

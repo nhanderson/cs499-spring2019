@@ -167,6 +167,9 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
   # should use K-fold cross-validation based on the fold IDs provided in fold.vec
   fold.ids <- unique(fold.vec)
   
+  # determine if v.vec is binary to be used during loss calculation
+  is.binary <- all(y.vec %in% c(0,1))
+  
   # initalize loss matrix to store loss values for each fold
   fold.validation.loss.mat <- matrix(0, length(fold.ids), max.iterations)
   fold.train.loss.mat <- matrix(0, length(fold.ids), max.iterations)
@@ -213,7 +216,7 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
   return (list(pred.mat=final.result$pred.mat, 
                V.mat=final.result$V.mat, 
                w.vec=final.result$w.vec, 
-               predict(testX.mat)=final.result$predict(testX.mat), 
+               predict=final.result$predict, 
                mean.validation.loss=mean.validation.loss, 
                mean.train.loss.vec=mean.train.loss.vec, 
                selected.steps=selected.steps))
