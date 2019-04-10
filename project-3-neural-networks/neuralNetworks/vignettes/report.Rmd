@@ -33,3 +33,73 @@ for(data.name in data.name.vec){
 }
 str(data.list)
 ```
+
+## Data set 1: spam
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 2: SAheart
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 3: zip.train
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 4: prostate
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
+
+## Data set 5: ozone
+
+### Matrix of loss values
+
+print out and/or plot the matrix.
+
+comment on difference in accuracy.
+
+### Train/validation loss plots
+
+plot the two loss functions.
+
+What are the optimal regularization parameters?
