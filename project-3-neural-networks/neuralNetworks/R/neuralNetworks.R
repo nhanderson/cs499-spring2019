@@ -51,13 +51,17 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   if(!is.numeric(y.vec)){
     stop("y.vec must be a vector")
   }
+<<<<<<< HEAD
   if( !(is.integer(max.iterations) && max.iterations>1) && length(max.iterations) == 1 ){
+=======
+  if( !(is.integer(max.iterations) && max.iterations>1) ){
+>>>>>>> 0f3d265763cf5ab3ac6bfe4aa39e568fb69bb161
     stop("max.iterations must be an integer greater than 1")
   }
   if( !(is.numeric(step.size) && step.size > 0 )) {
     stop("step.size must be numeric and greater than 0")
   }
-  if( !is.integer(n.hidden.units) && n.hidden.units > 0){
+  if( !(is.integer(n.hidden.units) && n.hidden.units > 0)){
     stop("n.hidden.units must be an integer greater than 0")
   }
   if(!is.logical(is.train)){
@@ -80,12 +84,12 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
 
   #' loop through actual train data set
   for(n in c(1:max.iterations)){
-    A <- X.scaled.mat %*% V   #' 1
+    A <- X.scaled.mat %*% V.mat   #' 1
     sigmoid <- function(a){  
       1/(1+exp(-a))
     }
     Z <- sigmoid(A)           #' 2
-    b <- as.numeric(Z %*% w)  #' 3
+    b <- as.numeric(Z %*% w.vec)  #' 3
     
     if( is.binary ){
       delta.w <- -y.tilde %*% sigmoid(-y.tilde %*% b) 
@@ -95,7 +99,7 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     }
     
     A.deriv <- Z * (1-Z)    
-    delta.v <- diag(delta.w) %*% A.deriv %*% diag(w)      #' 5
+    delta.v <- diag(delta.w) %*% A.deriv %*% diag(w.vec)      #' 5
     
     grad.w <- t(Z) %*% delta.w /nrow(X.scaled.mat)        #' 6
     grad.V <- t(X.scaled.mat) %*% delta.v / nrow(X.scaled.mat)    #' 7
