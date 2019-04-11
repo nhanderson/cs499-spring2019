@@ -193,15 +193,15 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
     # use the square loss for regression and the 01-loss for binary classification
     
     fold.validation.loss <- if(is.binary){
-      
+      log(1+exp(-y.vec[is.validation]))
     }else{
-      
+      (fold.pred.mat[is.validation] - y.vec[is.validation])^2 / nrow(X.mat) 
     }
     
     fold.train.loss <- if(is.binary){
-      
+      log(1+exp(-y.vec[is.train]))
     }else{
-      
+      (fold.pred.mat[is.train] - y.vec[is.train])^2 / nrow(X.mat) 
     }
       
     # store fold loss in loss matrix
@@ -213,14 +213,14 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
   mean.validation.loss.vec <- if(is.binary){
     
   }else{
-    
+    colMeans(fold.validation.loss.mat)
   }
     
   # TODO compute mean.train.loss.vec, analogous to above but for the train data.
   mean.train.loss.vec <- if(is.binary){
     
   }else{
-    
+    colMeans(fold.train.loss.mat)
   }
     
   # minimize the mean validation loss to determine selected.steps, the optimal number of steps/iterations.
