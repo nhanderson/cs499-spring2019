@@ -184,25 +184,43 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
     is.validation <- which(fold.vec == fold.i)
     is.train <- which(fold.vec != fold.i)
     
-    # TODO for each train/validation split, use NNetIterations to compute the predictions for all observations
+    # For each train/validation split, use NNetIterations to compute the predictions for all observations
     fold.result <- NNetIterations( X.mat, y.vec, max.iterations, step.size, n.hidden.units, is.train )
     fold.pred.mat <- fold.result$pred.mat
     
-    # TODO calculate the loss for the fold 
+    # Calculate the loss for the fold 
     # use the square loss for regression and the 01-loss for binary classification
-    fold.validation.loss <-
-    fold.train.loss <-
+    
+    fold.validation.loss <- if(is.binary){
+      log(1+exp(-y.vec[is.validation]))
+    }else{
+      (fold.pred.mat[is.validation] - y.vec[is.validation])^2 / nrow(X.mat) 
+    }
+    
+    fold.train.loss <- if(is.binary){
+      log(1+exp(-y.vec[is.train]))
+    }else{
+      (fold.pred.mat[is.train] - y.vec[is.train])^2 / nrow(X.mat) 
+    }
       
     # store fold loss in loss matrix
     fold.validation.loss.mat[fold.i, ] <- fold.validation.loss
     fold.train.loss.mat[fold.i, ] <- fold.train.loss
   }
-  # TODO compute mean.validation.loss.vec, which is a vector (with max.iterations elements) of mean validation loss over all K
+  # Compute mean.validation.loss.vec, which is a vector (with max.iterations elements) of mean validation loss over all K
   # folds (use the square loss for regression and the 01-loss for binary classification).
-  mean.validation.loss.vec <- 
+  mean.validation.loss.vec <- if(is.binary){
+    
+  }else{
+    colMeans(fold.validation.loss.mat)
+  }
     
   # TODO compute mean.train.loss.vec, analogous to above but for the train data.
-  mean.train.loss.vec <- 
+  mean.train.loss.vec <- if(is.binary){
+    
+  }else{
+    colMeans(fold.train.loss.mat)
+  }
     
   # minimize the mean validation loss to determine selected.steps, the optimal number of steps/iterations.
   selected.steps <- which.min(mean.validation.loss.vec)
@@ -219,11 +237,10 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
   # mean.validation.loss, mean.train.loss.vec (for plotting train/validation loss curves)
   # selected.steps
   
-  return (list(pred.mat=final.result$pred.mat, 
-               V.mat=final.result$V.mat, 
-               w.vec=final.result$w.vec, 
-               predict=final.result$predict, 
-               mean.validation.loss=mean.validation.loss, 
-               mean.train.loss.vec=mean.train.loss.vec, 
-               selected.steps=selected.steps))
+  final.result <- NNetIterations(...)
+  final.result$mean.validation.loss <- mean.validation.loss
+  final.result$mean.train.loss.vec <-mean.train.loss.vec
+  final.result$selected.steps <- selected.steps
+  return(final.result)
+
 }

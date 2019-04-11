@@ -3,7 +3,7 @@ Title: Neural networks for regression and binary classification.
 Version: 2019.4.02
 Author: Nicholas Anderson, Megan Mikami
 Maintainer: Nicholas Anderson <nha4@nau.edu>
-Description:
+Description: An R package that implements a Neural Network
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
