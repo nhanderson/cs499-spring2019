@@ -51,11 +51,11 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   if(!is.numeric(y.vec)){
     stop("y.vec must be a vector")
   }
-  if(!(is.integer(max.iterations) && max.iterations>1) && length(max.iterations) == 1 ){
+  if( !(is.integer(max.iterations) && !max.iterations>1) && length(max.iterations) == 1 ){
     stop("max.iterations must be an integer greater than 1")
   }
-  if(!is.integer(step.size)){
-    stop("step.size must be an integer")
+  if( !(is.numeric(step.size) && step.size > 0 )) {
+    stop("step.size must be an integer and greater than 0")
   }
   if( !is.integer(n.hidden.units) && n.hidden.units > 0){
     stop("n.hidden.units must be an integer greater than 0")
