@@ -184,11 +184,11 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
     is.validation <- which(fold.vec == fold.i)
     is.train <- which(fold.vec != fold.i)
     
-    # TODO for each train/validation split, use NNetIterations to compute the predictions for all observations
+    # For each train/validation split, use NNetIterations to compute the predictions for all observations
     fold.result <- NNetIterations( X.mat, y.vec, max.iterations, step.size, n.hidden.units, is.train )
     fold.pred.mat <- fold.result$pred.mat
     
-    # TODO calculate the loss for the fold 
+    # Calculate the loss for the fold 
     # use the square loss for regression and the 01-loss for binary classification
     
     fold.validation.loss <- if(is.binary){
@@ -207,7 +207,7 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
     fold.validation.loss.mat[fold.i, ] <- fold.validation.loss
     fold.train.loss.mat[fold.i, ] <- fold.train.loss
   }
-  # TODO compute mean.validation.loss.vec, which is a vector (with max.iterations elements) of mean validation loss over all K
+  # Compute mean.validation.loss.vec, which is a vector (with max.iterations elements) of mean validation loss over all K
   # folds (use the square loss for regression and the 01-loss for binary classification).
   mean.validation.loss.vec <- if(is.binary){
     
