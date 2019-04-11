@@ -184,8 +184,18 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
     
     # TODO calculate the loss for the fold 
     # use the square loss for regression and the 01-loss for binary classification
-    fold.validation.loss <-
-    fold.train.loss <-
+    
+    fold.validation.loss <- if(is.binary){
+      
+    }else{
+      
+    }
+    
+    fold.train.loss <- if(is.binary){
+      
+    }else{
+      
+    }
       
     # store fold loss in loss matrix
     fold.validation.loss.mat[fold.i, ] <- fold.validation.loss
@@ -193,10 +203,18 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
   }
   # TODO compute mean.validation.loss.vec, which is a vector (with max.iterations elements) of mean validation loss over all K
   # folds (use the square loss for regression and the 01-loss for binary classification).
-  mean.validation.loss.vec <- 
+  mean.validation.loss.vec <- if(is.binary){
+    
+  }else{
+    
+  }
     
   # TODO compute mean.train.loss.vec, analogous to above but for the train data.
-  mean.train.loss.vec <- 
+  mean.train.loss.vec <- if(is.binary){
+    
+  }else{
+    
+  }
     
   # minimize the mean validation loss to determine selected.steps, the optimal number of steps/iterations.
   selected.steps <- which.min(mean.validation.loss.vec)
@@ -213,11 +231,10 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
   # mean.validation.loss, mean.train.loss.vec (for plotting train/validation loss curves)
   # selected.steps
   
-  return (list(pred.mat=final.result$pred.mat, 
-               V.mat=final.result$V.mat, 
-               w.vec=final.result$w.vec, 
-               predict=final.result$predict, 
-               mean.validation.loss=mean.validation.loss, 
-               mean.train.loss.vec=mean.train.loss.vec, 
-               selected.steps=selected.steps))
+  final.result <- NNetIterations(...)
+  final.result$mean.validation.loss <- mean.validation.loss
+  final.result$mean.train.loss.vec <-mean.train.loss.vec
+  final.result$selected.steps <- selected.steps
+  return(final.result)
+
 }
