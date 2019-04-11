@@ -106,10 +106,9 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     
     prediction <- t(w.vec) %*% sigmoid(t(V.mat %*% X.train))
     prediction.vector <- c(prediction.vector, prediction)
+    pred.mat[, prediction.index] <- prediction.vector
   }
-  
-  pred.mat[, prediction.index] <- prediction.vector
-  
+
   #' unscale predictions
   V.orig <- V.mat/attr(X.scaled.mat, "scaled:scale")
   b.orig <- -t(V.mat/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
