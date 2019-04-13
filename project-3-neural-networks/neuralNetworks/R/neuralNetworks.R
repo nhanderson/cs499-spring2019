@@ -13,36 +13,17 @@
 #'
 #' @examples
 #'data(ozone, package="ElemStatLearn")
-#'head(ozone)
-#'X.unscaled.mat <- as.matrix(ozone[,-1])
-#'head(X.unscaled.mat)
-#'X.scaled <- scale(X.unscaled.mat)
-#'head(X.scaled.mat)
+#'X.mat <- as.matrix(ozone[,-1])
 #'y.vec <- ozone[,1]
-#'n.hidden.units <- 2 #u
-#'set.seed(1) # for reproducibility if needed
-#'V <- matrix(rnorm(ncol(X.scaled.mat)*n.hidden.units), ncol(X.scaled.mat), n.hidden.units)
-#'w <- rnorm(n.hidden.units)
-
-#' loop
-#' head( A <- X.scaled.mat %*% V) #1
-#' sigmoid <- function(a){
-#' 1/(1+exp(-a))
-#' }
-#' Z <- sigmoid(A) #2
-#' head(b <- as.numeric(Z %*% w)) #3
-#' head(delta.w <- b - y.vec) #4
-#' head(A.deriv <- Z * (1-Z))
-#' head(delta.v <- diag(delta.w) %*% A.deriv %*% diag(w)) #5
-#' head(grad.w <- t(Z) %*% delta.w /nrow(X.scaled.mat)) #6
-#' head(grad.V <- t(X.scaled.mat) %*% delta.v / nrow(X.scaled.mat)) #7
-
-#' take a step
-#' step.size <- 0.1
-#' w <- w - step.size * grad.w
-#' V <- V - step.size * grad.V
-#' sum(abs(c(grad.w, as.numeric(grad.V))))
-#' calc validation loss and stop when value goes up
+#'n.hidden.units <- 2L #u
+#'max.iterations <- 5L
+#'n.folds <- 5
+#'unique.folds <- 1:n.folds
+#'set.seed(1)
+#'fold.vec <- sample(rep(unique.folds, l=nrow(X.unscaled.mat)))
+#'validation.fold <- 1
+#'is.train <- fold.vec != validation.fold
+#'NNetIterations(X.mat, y.vec, max.iterations, step.size, n.hidden.units, is.train)
 
 NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.units, is.train ){
   if(!is.matrix(X.mat)){
@@ -63,14 +44,16 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   if(!is.logical(is.train)){
     stop("is.train must be a logical vector")
   }
-
+  
   X.scaled.mat <- scale(X.mat)
   V.mat <- matrix(rnorm(ncol(X.scaled.mat)*n.hidden.units), ncol(X.scaled.mat), n.hidden.units)
   w.vec <- rnorm(n.hidden.units)
   
   #' split is.train into train and validation set
-  X.train <- X.mat[is.train,]
+  X.train <- X.mat[is.train, ]
   y.train <- y.vec[is.train]
+  
+  pred.mat <- matrix(0, length(y.vec), max.iterations)
   
   #' convert binary vector into scaled y.tilde in {-1,1}
   is.binary <- all(y.vec %in% c(0,1))
@@ -95,32 +78,32 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     }
     
     A.deriv <- Z * (1-Z)    
-    delta.v <- diag(delta.w) %*% A.deriv %*% diag(w.vec)      #' 5
+    delta.v <- diag(delta.w) %*% A.deriv %*% diag(as.numeric(w.vec))     #' 5
     
     grad.w <- t(Z) %*% delta.w /nrow(X.scaled.mat)        #' 6
     grad.V <- t(X.scaled.mat) %*% delta.v / nrow(X.scaled.mat)    #' 7
 
     #' take a step
-    w <- w - step.size * grad.w
-    V <- V - step.size * grad.V
+    w.vec <- w.vec - step.size * grad.w
+    V.mat <- V.mat - step.size * grad.V
     
-    prediction <- t(w.vec) %*% sigmoid(t(V.mat %*% X.train))
-    prediction.vector <- c(prediction.vector, prediction)
-    pred.mat[, prediction.index] <- prediction.vector
+    prediction <- t(w.vec) %*% sigmoid(t(X.scaled.mat %*% V.mat))
+    pred.mat[, n] <- prediction
   }
 
   #' unscale predictions
   V.orig <- V.mat/attr(X.scaled.mat, "scaled:scale")
   b.orig <- -t(V.mat/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
   
-  #' prediction function that takes an unsclaed X matrix
   V.with.intercept <- rbind(intercept=as.numeric(b.orig), V.orig)
+  
+  #' prediction function that takes an unsclaed X matrix
   predict <- function(X.unscaled){
     A.mat <- cbind(1, X.unscaled) %*% V.with.intercept
     sigmoid(A.mat) %*% w
   }
   
-  return (list(pred.mat, V.mat, w.vec, predict))
+  return (list(pred.mat=pred.mat, V.mat = V.with.intercept, w.vec = w.vec, predict=predict))
 }
 
 #' NNetEarlyStoppingCV
@@ -137,7 +120,17 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
 #' @return list with pred.mat, V.mat, x.vec, predict(testX.mat), mean.validation.loss, mean.train.loss.vec, selected.steps
 #'
 #' @examples
-#' 
+#'data(ozone, package="ElemStatLearn")
+#'X.mat <- as.matrix(ozone[,-1])
+#'y.vec <- ozone[,1]
+#'n.hidden.units <- 2L #u
+#'max.iterations <- 6L
+#'n.folds <- 5L
+#'unique.folds <- 1:n.folds
+#'set.seed(1)
+#'fold.vec <- sample(rep(unique.folds, l=nrow(X.mat)))
+#'is.train <- fold.vec != validation.fold
+#'NNetEarlyStoppingCV(X.mat, y.vec, fold.vec, max.iterations, step.size, n.hidden.units)
 NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.size, n.hidden.units ){
   if(!is.matrix(X.mat)){
     stop("X.mat must be a matrix")
@@ -181,8 +174,8 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
   fold.train.loss.mat <- matrix(0, length(fold.ids), max.iterations)
   
   for(fold.i in fold.ids){
-    is.validation <- which(fold.vec == fold.i)
-    is.train <- which(fold.vec != fold.i)
+    is.train <- fold.vec != fold.i
+    is.validation <- fold.vec == fold.i
     
     # For each train/validation split, use NNetIterations to compute the predictions for all observations
     fold.result <- NNetIterations( X.mat, y.vec, max.iterations, step.size, n.hidden.units, is.train )
@@ -191,36 +184,25 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
     # Calculate the loss for the fold 
     # use the square loss for regression and the 01-loss for binary classification
     
-    fold.validation.loss <- if(is.binary){
-      log(1+exp(-y.vec[is.validation]))
+    fold.loss <- if(is.binary){
+      log(1+exp(-y.vec %*% fold.pred.mat))
     }else{
-      (fold.pred.mat[is.validation] - y.vec[is.validation])^2 / nrow(X.mat) 
+      abs(fold.pred.mat - y.vec)^2 / nrow(X.mat) 
     }
     
-    fold.train.loss <- if(is.binary){
-      log(1+exp(-y.vec[is.train]))
-    }else{
-      (fold.pred.mat[is.train] - y.vec[is.train])^2 / nrow(X.mat) 
-    }
-      
+    fold.validation.loss <- fold.loss[is.validation,]
+    fold.train.loss <- fold.loss[is.train,]
+    
     # store fold loss in loss matrix
-    fold.validation.loss.mat[fold.i, ] <- fold.validation.loss
-    fold.train.loss.mat[fold.i, ] <- fold.train.loss
+    fold.validation.loss.mat[fold.i, ] <- colSums(fold.validation.loss)
+    fold.train.loss.mat[fold.i, ] <- colSums(fold.train.loss)
   }
   # Compute mean.validation.loss.vec, which is a vector (with max.iterations elements) of mean validation loss over all K
   # folds (use the square loss for regression and the 01-loss for binary classification).
-  mean.validation.loss.vec <- if(is.binary){
-    
-  }else{
-    colMeans(fold.validation.loss.mat)
-  }
+  mean.validation.loss.vec <- colMeans(fold.validation.loss.mat)
     
   # TODO compute mean.train.loss.vec, analogous to above but for the train data.
-  mean.train.loss.vec <- if(is.binary){
-    
-  }else{
-    colMeans(fold.train.loss.mat)
-  }
+  mean.train.loss.vec <- colMeans(fold.train.loss.mat)
     
   # minimize the mean validation loss to determine selected.steps, the optimal number of steps/iterations.
   selected.steps <- which.min(mean.validation.loss.vec)
@@ -237,8 +219,7 @@ NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.si
   # mean.validation.loss, mean.train.loss.vec (for plotting train/validation loss curves)
   # selected.steps
   
-  final.result <- NNetIterations(...)
-  final.result$mean.validation.loss <- mean.validation.loss
+  final.result$mean.validation.loss <- mean.validation.loss.vec
   final.result$mean.train.loss.vec <-mean.train.loss.vec
   final.result$selected.steps <- selected.steps
   return(final.result)
