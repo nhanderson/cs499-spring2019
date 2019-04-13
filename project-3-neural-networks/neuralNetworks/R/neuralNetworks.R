@@ -20,7 +20,8 @@
 #'n.folds <- 5
 #'unique.folds <- 1:n.folds
 #'set.seed(1)
-#'fold.vec <- sample(rep(unique.folds, l=nrow(X.unscaled.mat)))
+#'step.size <- 0.1
+#'fold.vec <- sample(rep(unique.folds, l=nrow(X.mat)))
 #'validation.fold <- 1
 #'is.train <- fold.vec != validation.fold
 #'NNetIterations(X.mat, y.vec, max.iterations, step.size, n.hidden.units, is.train)
@@ -49,19 +50,19 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
   V.mat <- matrix(rnorm(ncol(X.scaled.mat)*n.hidden.units), ncol(X.scaled.mat), n.hidden.units)
   w.vec <- rnorm(n.hidden.units)
   
-  #' split is.train into train and validation set
+  # split is.train into train and validation set
   X.train <- X.mat[is.train, ]
   y.train <- y.vec[is.train]
   
   pred.mat <- matrix(0, length(y.vec), max.iterations)
   
-  #' convert binary vector into scaled y.tilde in {-1,1}
+  # convert binary vector into scaled y.tilde in {-1,1}
   is.binary <- all(y.vec %in% c(0,1))
   if( is.binary ){
     y.tilde <- ifelse(y.vec == 1, 1, -1)
   }
 
-  #' loop through actual train data set
+  # loop through actual train data set
   for(n in c(1:max.iterations)){
     A <- X.scaled.mat %*% V.mat   #' 1
     sigmoid <- function(a){  
@@ -83,7 +84,7 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     grad.w <- t(Z) %*% delta.w /nrow(X.scaled.mat)        #' 6
     grad.V <- t(X.scaled.mat) %*% delta.v / nrow(X.scaled.mat)    #' 7
 
-    #' take a step
+    # take a step
     w.vec <- w.vec - step.size * grad.w
     V.mat <- V.mat - step.size * grad.V
     
@@ -91,13 +92,13 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
     pred.mat[, n] <- prediction
   }
 
-  #' unscale predictions
+  # unscale predictions
   V.orig <- V.mat/attr(X.scaled.mat, "scaled:scale")
   b.orig <- -t(V.mat/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
   
   V.with.intercept <- rbind(intercept=as.numeric(b.orig), V.orig)
   
-  #' prediction function that takes an unsclaed X matrix
+  # prediction function that takes an unsclaed X matrix
   predict <- function(X.unscaled){
     A.mat <- cbind(1, X.unscaled) %*% V.with.intercept
     sigmoid(A.mat) %*% w
@@ -124,12 +125,12 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
 #'X.mat <- as.matrix(ozone[,-1])
 #'y.vec <- ozone[,1]
 #'n.hidden.units <- 2L #u
-#'max.iterations <- 6L
+#'max.iterations <- 100L
 #'n.folds <- 5L
 #'unique.folds <- 1:n.folds
 #'set.seed(1)
+#'step.size <- 0.1
 #'fold.vec <- sample(rep(unique.folds, l=nrow(X.mat)))
-#'is.train <- fold.vec != validation.fold
 #'NNetEarlyStoppingCV(X.mat, y.vec, fold.vec, max.iterations, step.size, n.hidden.units)
 NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.size, n.hidden.units ){
   if(!is.matrix(X.mat)){
