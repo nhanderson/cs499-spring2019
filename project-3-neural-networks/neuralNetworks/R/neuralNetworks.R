@@ -1,11 +1,11 @@
-#' NNetIterations
+#' NNetIterations 
 #' 
 #' R function that calculates the precition function of a neural network using n-hidden units
 #' 
 #' @param X.mat feature matrix (n_observations x n_features)
 #' @param y.vec label vector (n_observations x 1)
 #' @param max.iterations int scalar > 1
-#' @param step.size
+#' @param step.size selected step size
 #' @param n.hidden.units number of hidden units
 #' @param is.train logical vector of size n_observations, TRUE if the observation is in the train set, FALSE for the validation set
 #' 
@@ -25,6 +25,8 @@
 #'validation.fold <- 1
 #'is.train <- fold.vec != validation.fold
 #'NNetIterations(X.mat, y.vec, max.iterations, step.size, n.hidden.units, is.train)
+#'
+#'@export
 
 NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.units, is.train ){
   if(!is.matrix(X.mat)){
@@ -115,7 +117,7 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
 #' @param y.vec label vector (n_observations x 1)
 #' @param fold.vec fold ID vector (n_observations x 1)
 #' @param max.iterations int scalar > 1
-#' @param step.size
+#' @param step.size selected step size
 #' @param n.hidden.units number of hidden units
 #' 
 #' @return list with pred.mat, V.mat, x.vec, predict(testX.mat), mean.validation.loss, mean.train.loss.vec, selected.steps
@@ -132,6 +134,8 @@ NNetIterations <- function( X.mat, y.vec, max.iterations, step.size, n.hidden.un
 #'step.size <- 0.1
 #'fold.vec <- sample(rep(unique.folds, l=nrow(X.mat)))
 #'NNetEarlyStoppingCV(X.mat, y.vec, fold.vec, max.iterations, step.size, n.hidden.units)
+#'
+#'@export
 NNetEarlyStoppingCV <- function( X.mat, y.vec, fold.vec, max.iterations, step.size, n.hidden.units ){
   if(!is.matrix(X.mat)){
     stop("X.mat must be a matrix")

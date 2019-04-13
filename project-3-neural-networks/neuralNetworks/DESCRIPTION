@@ -11,5 +11,6 @@ RoxygenNote: 6.1.1
 Type: Package
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    ElemStatLearn
 VignetteBuilder: knitr
