@@ -1,0 +1,16 @@
+Package: l1regularization
+Title: L1-regularized linear models for regression and binary classification
+Version: 2019.4.18
+Author: Nicholas Anderson, Megan Mikami
+Maintainer: Nicholas Anderson <nha4@nau.edu>
+Description: R package that implements optimization algorithms for linear models with L1-regularization.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Type: Package
+Suggests: 
+    knitr,
+    rmarkdown,
+    ElemStatLearn
+VignetteBuilder: knitr
