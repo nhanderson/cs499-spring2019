@@ -66,25 +66,39 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
     y.tilde <- ifelse(y.vec==1,1,-1)
   }
   
-  grad.loss <- function(w){
-    X.int <- cbind(1, X.scaled.mat)
-    pred.vec <- X.int %*% w
-    
-    if(is.01){
-    prod.vec <- sigmoid(-pred.vec * y.tilde)
-    -t(X.int) %*% (y.tilde * prod.vec)
-    }
-    else{
-      pred.vec - y.vec
+  is.opt <- function(d.vec, w.vec) {
+    result.vec <- rep( 0, length(w.vec) )
+    for(index in length(w.vec)){
+      if(w.vec[index] != 0) {
+        result.vec[index] <- abs(d.vec[index] - (sign(w.vec[index]))
+      } else {
+        result.vec[index] <- abs(d.vec)
+      }
+      ifelse(length(result.vec[result.vec < opt.thresh], TRUE, FALSE)
     }
   }
   
-  d.vec <- -grad.loss(w.vec)
-
-  u.vec <- w.vec + step.size * d.vec
-
-  weight.vec <- c(u.vec[1],soft(u.vec[-1], step.size * opt.thresh))
-  
+  while(!(is.opt)){
+    grad.loss <- function(w.vec){
+      X.int <- cbind(1, X.scaled.mat)
+      pred.vec <- X.int %*% w.vec
+      if(is.01){
+        prod.vec <- sigmoid(-pred.vec * y.tilde)
+        -t(X) %*% (y.tilde * prod.vec)
+      } else {
+        pred.vec - y.vec
+      }
+      
+      #1/n ∑i=1^n L[w^T x_i + b, y_i] + penalty * ||w||_1
+    }
+    
+    d.vec <- grad.loss(w.vec)
+    
+    u.vec <- w.vec + step.size * d.vec
+    
+    w.vec <- c(u.vec[1],soft(u.vec[-1], step.size * opt.thresh))
+  }
+  weight.vec <- w.vec
   return (weight.vec)
   
 }
