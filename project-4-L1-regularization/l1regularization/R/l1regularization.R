@@ -32,9 +32,8 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
   if( !(is.numeric(step.size) && step.size > 0)) {
     stop("step.size must be numeric and greater than zero")
   }
-
-  #initialize w w/ intercept col, first term is bias/intercept
-  w.vec <- rep( 0, l=ncol(X.scaled.mat)+1 )
+  
+  X.filtered <- X.scaled.mat[ , attr(X.sc, "scaled:scale") != 0]
   
   sigmoid <- function(z){
     1/(1+exp(-z))
@@ -104,16 +103,35 @@ LinearModelL1penalties <- function( X.mat, y.vec, penalty.vec, step.size ){
     stop("step.size must be numeric and greater than zero")
   }
   
+  # scale X.mat
   X.scaled.mat <- scale(X.mat)
   
+  # intialize w.mat for storing w.vec for each penalty
+  w.mat <- matrix(0, ncol(X.scaled.mat)+1, length(penalty.vec))
+  
+  # determine if y.vec is binary and create y.tilde if so
   is.01<- all.y.vec %in% c(0,1)
   
-  if(is.01){
-    y.tilde <- ifelse(y.vec==1,1,-1)
+  # initialize opt.thresh and initial.weight.vec to prime loop
+  opt.thresh <- 0.01
+  initial.weight.vec <- rep( 0, l=ncol(X.scaled.mat)+1 )
+  
+  # loop through penalty.vec calling LinearModelL1 for each one
+  for( penalty in penalty.vec ) {
+    w.tilde.opt.vec <- LinearModelL1( X.scaled.mat, y.vec, penalty, opt.thresh, initial.weight.vec, step.size )
+    
+    # prime initial.weight.vec for warm restart
+    initial.weight.vec <- w.tilde.opt.vec
+    
+    # unscale w.opt.sc.vec and 
+    w.orig <- w.tilde.opt.vec/attr(X.scaled.mat, "scaled:scale")
+    b.orig <- -t(w.tilde.opt.vec/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
+    
+    # store unscaled result
+    w.mat[ , penalty.index ] <- c(b.orig, w.orig)
   }
   
-  X.filtered <- X.scaled.mat[ , attr(X.sc, "scaled:scale") != 0]
-  
+  return w.mat
 }
 
 #' LinearModelL1CV 
@@ -153,7 +171,7 @@ LinearModelL1CV <- function( X.mat, y.vec, fold.vec, n.folds=5, penalty.vec, ste
   # should use K-fold cross-validation based on the fold IDs provided in fold.vec
   fold.ids <- unique(fold.vec)
   
-  # determine if v.vec is binary to be used during loss calculation
+  # determine if y.vec is binary to be used during loss calculation
   is.binary <- all(y.vec %in% c(0,1))
   
   # initalize loss matrix to store loss values for each fold
