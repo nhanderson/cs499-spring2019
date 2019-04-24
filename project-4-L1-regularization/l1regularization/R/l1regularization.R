@@ -32,7 +32,45 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
   if( !(is.numeric(step.size) && step.size > 0)) {
     stop("step.size must be numeric and greater than zero")
   }
+
+  #initialize w w/ intercept col, first term is bias/intercept
+  w.vec <- rep( 0, l=ncol(X.scaled.mat)+1 )
   
+  sigmoid <- function(z){
+    1/(1+exp(-z))
+  }
+  
+  soft <- function(x,lambda){
+    sign(x) * (abs(x-lambda))
+  }
+  
+  sign <- function(x){
+    if(x > 0){ 1 } 
+    else if (x < 0) { -1 } 
+    else { 0 }
+  }
+  
+  posPart <- function(x) {
+    if( x > 0 ) { x } 
+    else { 0 }
+  }
+  
+  if(is.01){
+    y.tilde <- ifelse(y.vec==1,1,-1)
+  }
+  
+  grad.loss <- function(w.vec){
+    X.int <- cbind(1, X.scaled.mat)
+    pred.vec <- X.int %*% w.vec
+    prod.vec <- sigmoid(-pred.vec * y.tilde)
+    -t(X) %*% (y.tilde * prod.vec) 
+  }
+  
+  d.vec <- grad.loss(w.vec)
+
+  u.vec <- w.vec + step.size * d.vec
+
+  w.vec <- c(u.vec[1],soft(u.vec[-1], step.size * opt.thresh))
   
 }
 
@@ -40,21 +78,75 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
 #' 
 #' 
 #' 
-#' @param 
+#' @param X.mat
+#' @param y.vec
+#' @param penalty.vec
+#' @param step.size
 #' 
 #' @return 
 #'
 #' @examples
 #' 
-
+LinearModelL1penalties <- function( X.mat, y.vec, penalty.vec, step.size ){
+  if(!is.matrix(X.mat)){
+    stop("X.mat must be a matrix")
+  }
+  if(!is.numeric(y.vec)){
+    stop("y.vec must be a vector")
+  }
+  if( !(is.numeric(penalty.vec)) ){
+    stop("penalty.vec must be numeric vector")
+  }
+  if( !(is.numeric(step.size) && step.size > 0)) {
+    stop("step.size must be numeric and greater than zero")
+  }
+  
+  X.scaled.mat <- scale(X.mat)
+  
+  is.01<- all.y.vec %in% c(0,1)
+  
+  if(is.01){
+    y.tilde <- ifelse(y.vec==1,1,-1)
+  }
+  
+  X.filtered <- X.scaled.mat[ , attr(X.sc, "scaled:scale") != 0]
+  
+}
 
 #' LinearModelL1CV 
 #' 
 #' 
 #' 
-#' @param 
+#' @param X.mat
+#' @param y.vec
+#' @param fold.vec
+#' @param n.folds
+#' @param penalty.vec
+#' @param step.size
 #' 
 #' @return 
 #'
 #' @examples
+LinearModelL1CV <- function( X.mat, y.vec, fold.vec, n.folds=5, penalty.vec, step.size ){
+  if(!is.matrix(X.mat)){
+    stop("X.mat must be a matrix")
+  }
+  if(!is.numeric(y.vec)){
+    stop("y.vec must be a vector")
+  }
+  if(!is.numeric(fold.vec)){
+    stop("fold.vec must be a numeric vector")
+  }
+  if( !(is.integer(n.folds) && n.folds > 0)) {
+    stop("n.folds must be an integer and greater than zero")
+  }
+  if( !(is.numeric(penalty.vec)) ){
+    stop("penalty.vec must be numeric vector")
+  }
+  if( !(is.numeric(step.size) && step.size > 0)) {
+    stop("step.size must be numeric and greater than zero")
+  }
+  
+  set.seed(1)
 
+}
