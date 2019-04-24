@@ -34,14 +34,10 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
   }
 
   #initialize w w/ intercept col, first term is bias/intercept
-  w.vec <- rep( 0, l=ncol(X.scaled.mat)+1 )
+  w <- rep( 0, l=ncol(X.scaled.mat)+1 )
   
   sigmoid <- function(z){
     1/(1+exp(-z))
-  }
-  
-  soft <- function(x,lambda){
-    sign(x) * (abs(x-lambda))
   }
   
   sign <- function(x){
@@ -55,22 +51,35 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
     else { 0 }
   }
   
+  soft <- function(x,lambda){
+    sign(x) * postPart((abs(x-lambda)))
+  }
+  is.01 <- all(y.vec %in% c(0,1))
+  
   if(is.01){
     y.tilde <- ifelse(y.vec==1,1,-1)
   }
   
-  grad.loss <- function(w.vec){
+  grad.loss <- function(w){
     X.int <- cbind(1, X.scaled.mat)
-    pred.vec <- X.int %*% w.vec
+    pred.vec <- X.int %*% w
+    
+    if(is.01){
     prod.vec <- sigmoid(-pred.vec * y.tilde)
-    -t(X) %*% (y.tilde * prod.vec) 
+    -t(X.int) %*% (y.tilde * prod.vec)
+    }
+    else{
+      pred.vec - y.vec
+    }
   }
   
-  d.vec <- grad.loss(w.vec)
+  d.vec <- -grad.loss(w.vec)
 
   u.vec <- w.vec + step.size * d.vec
 
-  w.vec <- c(u.vec[1],soft(u.vec[-1], step.size * opt.thresh))
+  weight.vec <- c(u.vec[1],soft(u.vec[-1], step.size * opt.thresh))
+  
+  return (weight.vec)
   
 }
 
@@ -83,7 +92,7 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
 #' @param penalty.vec
 #' @param step.size
 #' 
-#' @return 
+#' @return weight matrix on original scale 
 #'
 #' @examples
 #' 
@@ -103,13 +112,24 @@ LinearModelL1penalties <- function( X.mat, y.vec, penalty.vec, step.size ){
   
   X.scaled.mat <- scale(X.mat)
   
-  is.01<- all.y.vec %in% c(0,1)
+  # is.01 <- all.y.vec %in% c(0,1)
   
-  if(is.01){
-    y.tilde <- ifelse(y.vec==1,1,-1)
-  }
+  #if(is.01){
+   # y.tilde <- ifelse(y.vec==1,1,-1)
+  #}
   
   X.filtered <- X.scaled.mat[ , attr(X.sc, "scaled:scale") != 0]
+  
+  initial.weight.vec <- penalty.vec[,1]
+  
+  for(n in c(1:ncol(penalty.vec))){
+    weight.vec <- LinearModelL1(X.filtered, y.vec, penalty.vec, opt.thresh, initial.weight.vec, step.size)
+    initial.weight.vec <- weight.vec
+    weight.vec.orig <- weight.vec/attr(attr(X.scaled.mat, "scaled:scale"))
+    W.mat <- rbind(weight.vec.orig)
+  }
+  
+  return (W.mat)
   
 }
 
