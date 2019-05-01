@@ -1,6 +1,6 @@
 #' LinearModelL1 
 #' 
-#' 
+#' R function that calculates the L1 Regularization
 #' 
 #' @param X.scaled.mat scaled feature matrix (n_observations x n_features)
 #' @param y.vec label vector (n_observations x 1)
@@ -101,7 +101,7 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
 
 #' LinearModelL1penalties 
 #' 
-#' 
+#' R function that calculates the L1 penalties
 #' 
 #' @param X.mat feature matrix (n_observations x n_features)
 #' @param y.vec label vector (n_observations x 1)
@@ -160,7 +160,7 @@ LinearModelL1penalties <- function( X.mat, y.vec, penalty.vec, step.size ){
 
 #' LinearModelL1CV 
 #' 
-#' 
+#' R function that calculates the L1 cross-validation
 #' 
 #' @param X.mat feature matrix (n_observations x n_features)
 #' @param y.vec label vector (n_observations x 1)
