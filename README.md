@@ -7,5 +7,5 @@
 <li>Project 4 L1 Regularization</li>
 </ul>
 
-![https://api.travis-ci.com/nhanderson/cs499-spring2019.svg?branch=master](https://api.travis-ci.com/nhanderson/cs499-spring2019)
+[![travis build](https://api.travis-ci.com/nhanderson/cs499-spring2019.svg?branch=master)](https://api.travis-ci.com/nhanderson/cs499-spring2019)
 
