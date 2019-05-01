@@ -56,10 +56,6 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
     ifelse( x > 0, x, 0 )
   }
   
-  soft <- function(x,lambda){
-    sign(x) * postPart((abs(x-lambda)))
-  }
-  
   is.01 <- all(y.vec %in% c(0,1))
   
   if(is.01){
@@ -70,11 +66,11 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
     result.vec <- rep( 0, length(w.vec) )
     for(index in length(w.vec)){
       if(w.vec[index] != 0) {
-        result.vec[index] <- abs(d.vec[index] - (sign(w.vec[index]))
+        result.vec[index] <- abs(d.vec[index] - (sign(w.vec[index])))
       } else {
         result.vec[index] <- abs(d.vec)
       }
-      ifelse(length(result.vec[result.vec < opt.thresh], TRUE, FALSE)
+      ifelse(length(result.vec[result.vec < opt.thresh], TRUE, FALSE))
     }
   }
   
@@ -216,18 +212,15 @@ LinearModelL1CV <- function( X.mat, y.vec, fold.vec, n.folds=5, penalty.vec, ste
     
     # Calculate the loss for the fold 
     # use the square loss for regression and the 01-loss for binary classification
-    fold.validation.loss <- if(is.binary){
-      log(1+exp(-y.vec[is.validation]))
+    fold.loss <- if(is.binary){
+      log(1+exp(-y.vec))
     }else{
-      (fold.pred[is.validation]- y.vec[is.validation])^2 / nrow(X.mat[is.validation]) 
+      (fold.pred- y.vec)^2 / nrow(X.mat) 
     }
     
-    fold.train.loss <- if(is.binary){
-      log(1+exp(-y.vec[is.train]))
-    }else{
-      (fold.pred[is.train] - y.vec[is.train])^2 / nrow(X.mat[is.train]) 
-    }
-    
+    fold.validation.loss <- fold.loss[is.validation]
+    fold.train.loss <- fold.loss[is.train]
+
     # store fold loss in loss matrix
     fold.validation.loss.mat[fold.i, ] <- fold.validation.loss
     fold.train.loss.mat[fold.i, ] <- fold.train.loss
@@ -240,14 +233,12 @@ LinearModelL1CV <- function( X.mat, y.vec, fold.vec, n.folds=5, penalty.vec, ste
   
   final.w.vec <- LinearModelL1penalties( X.mat, y.vec, selected.penalty, step.size )
   
-  final.result$mean.validation.loss <- mean.validation.loss
-  final.result$mean.train.loss.vec <-mean.train.loss.vec
-  final.result$penalty.vec <- penalty.vec
-  final.result$selected.penalty <- selected.penalty
-  final.result$weight.vec <- final.w.vec
-  final.result$predict <- function(testX.mat){
-    
-  }
+  final.result <- list(mean.validation.loss <- mean.validation.loss,
+                       mean.train.loss.vec <-mean.train.loss.vec,
+                       penalty.vec <- penalty.vec,
+                       selected.penalty <- selected.penalty,
+                       weight.vec <- final.w.vec,
+                       predict <- function(testX.mat){})
   
   return(final.result)
 }
