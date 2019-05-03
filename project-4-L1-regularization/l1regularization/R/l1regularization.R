@@ -23,7 +23,7 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
   if( !(is.numeric(penalty) && penalty >= 0) ){
     stop("penalty must be numeric and greater than or equal to zero")
   }
-  if( !(is.numeric(opt.threash) && penalty > 0) ){
+  if( !(is.numeric(opt.thresh) && penalty > 0) ){
     stop("penalty must be numeric and greater than zero")
   }
   if( !is.numeric(initial.weight.vec)){
@@ -36,7 +36,7 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
   #initialize w w/ intercept col, first term is bias/intercept
   w <- rep( 0, l=ncol(X.scaled.mat)+1 )
   
-  X.filtered <- X.scaled.mat[ , attr(X.sc, "scaled:scale") != 0]
+  X.filtered <- X.scaled.mat[ , attr(X.scaled.mat, "scaled:scale") != 0]
   
   sigmoid <- function(z){
     1/(1+exp(-z))
@@ -70,7 +70,7 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
       } else {
         result.vec[index] <- abs(d.vec)
       }
-      ifelse(length(result.vec[result.vec < opt.thresh], TRUE, FALSE))
+      ifelse(length(result.vec[result.vec < opt.thresh]), TRUE, FALSE)
     }
   }
   
@@ -166,12 +166,13 @@ LinearModelL1penalties <- function( X.mat, y.vec, penalty.vec, step.size ){
 #' @param y.vec label vector (n_observations x 1)
 #' @param fold.vec fold ID vector (n_observations x 1)
 #' @param n.folds int scalar > 1
-#' @param penalty.vec
+#' @param penalty.vec penalty vector (n_observations x 1)
 #' @param step.size int scalar > 1
 #' 
 #' @return mean.validation.loss, mean.train.loss.vec, penalty.vec, selected.penalty, weight.vec, predict=function(testX.mat)
 #'
 #' @examples
+#' 
 LinearModelL1CV <- function( X.mat, y.vec, fold.vec, n.folds=5, penalty.vec, step.size ){
   if(!is.matrix(X.mat)){
     stop("X.mat must be a matrix")
