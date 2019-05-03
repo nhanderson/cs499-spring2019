@@ -1,5 +1,7 @@
 ---
-title: "report"
+title: "Report for Project 4 on L1-regularized linear models"
+author: "Nicholas Anderson, Megan Mikami"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{report}
@@ -16,4 +18,18 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(l1regularization)
+
+data.name.vec <- c(
+  "spam",
+  "SAheart",
+  "zip.train",
+  "prostate",
+  "ozone")
+data.list <- list()
+library(ElemStatLearn)
+for(data.name in data.name.vec){
+  data(list=data.name, package = "ElemStatLearn")
+  data.list[[data.name]] <- get(data.name)
+}
+str(data.list)
 ```
