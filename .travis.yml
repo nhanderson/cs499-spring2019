@@ -8,6 +8,6 @@ before_install:
 
 # Specify folder
 install:
-  - Rscript -e 'install.packages(c("devtools","roxygen2","testthat"));devtools::install_deps()'
+  - Rscript -e 'install.packages(c("devtools","roxygen2","testthat", "knitr"));devtools::install_deps()'
 script:
   - Rscript -e 'devtools::check()'
