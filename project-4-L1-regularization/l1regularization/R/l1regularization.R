@@ -111,13 +111,16 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
   
   u.vec <- w.vec + step.size * d.vec
   
-  while(is.opt(d.vec, w.vec) == FALSE){
+  count <- 0
+  
+  while((is.opt(d.vec, w.vec) == FALSE) & ( count < 1000 ) ){
     
     d.vec <- grad.loss(X.int, w.vec)
     
     u.vec <- w.vec + step.size * d.vec
     
     w.vec <- c(u.vec[1],soft(u.vec[-1], step.size * opt.thresh))
+    count = count + 1
   }
   
   weight.vec <- w.vec
