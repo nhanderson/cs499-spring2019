@@ -3,8 +3,11 @@
 language: R
 cache: packages
 
+before_install:
+ - cd project-4-L1-regularization/l1regularization/
+
 # Specify folder
 install:
-  - Rscript -e 'install.packages(c("devtools","roxygen2","testthat"));devtools::install_deps("project-4-L1-regularization/l1regularization")'
+  - Rscript -e 'install.packages(c("devtools","roxygen2","testthat"));devtools::install_deps("l1regularization")'
 script:
-  - Rscript -e 'devtools::check("project-4-L1-regularization/l1regularization/")'
+  - Rscript -e 'devtools::check("l1regularization")'
