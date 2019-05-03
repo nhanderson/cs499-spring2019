@@ -2,3 +2,9 @@
 
 language: R
 cache: packages
+
+# Specify folder
+install:
+  - Rscript -e 'devtools::install_deps("project-4-L1-regularization/l1regularization")'
+script:
+  - Rscript -e 'devtools::check("project-4-L1-regularization/l1regularization/")'
