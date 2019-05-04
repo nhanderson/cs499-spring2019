@@ -27,5 +27,23 @@ w.opt optimal weight vector (n_observations+1 x 1)
 R function that calculates the L1 Regularization
 }
 \examples{
-
+data(zip.train, package = "ElemStatLearn")
+all.y.vec <- zip.train[,1]
+is.01<- all.y.vec \%in\% c(0,1)
+y.vec <- all.y.vec[is.01]
+X.mat <- zip.train[is.01, -1]
+n.folds <- 5
+fold.vec <- sample(rep(1:n.folds, l=nrow(X.mat)))
+validation.fold <- 1
+is.train <- fold.vec != validation.fold
+is.validation <- fold.vec == validation.fold
+X.train <- X.mat[is.train,]
+y.train <- y.vec[is.train]
+X.scaled.mat <- scale(X.train)
+X.filtered <- X.scaled.mat[, attr(X.scaled.mat, "scaled:scale") != 0]
+opt.thresh <- 0.01
+initial.weight.vec <- rep( 0, l=ncol(X.filtered) +1)
+step.size <- 0.1
+penalty <- 1
+weight.vec <- LinearModelL1( X.filtered, y.train, penalty, opt.thresh, initial.weight.vec, step.size )
 }

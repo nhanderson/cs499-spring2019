@@ -16,6 +16,8 @@ LinearModelL1CV(X.mat, y.vec, fold.vec, n.folds = 5, penalty.vec,
 
 \item{n.folds}{int scalar > 1}
 
+\item{penalty.vec}{penalty vector (n_observations x 1)}
+
 \item{step.size}{int scalar > 1}
 }
 \value{
@@ -23,4 +25,7 @@ mean.validation.loss, mean.train.loss.vec, penalty.vec, selected.penalty, weight
 }
 \description{
 R function that calculates the L1 cross-validation
+}
+\examples{
+
 }
