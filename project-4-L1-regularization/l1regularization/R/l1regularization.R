@@ -228,6 +228,17 @@ LinearModelL1penalties <- function( X.mat, y.vec, penalty.vec, step.size ){
 #'
 #' @examples
 #' 
+#' data(zip.train, package = "ElemStatLearn")
+#' all.y.vec <- zip.train[,1]
+#' is.01<- all.y.vec %in% c(0,1)
+#' y.vec <- all.y.vec[is.01]
+#' X.mat <- zip.train[is.01, -1]
+#' n.folds <- 5
+#' fold.vec <- sample(rep(1:n.folds, l=nrow(X.mat)))
+#' step.size <- 0.1
+#' penalty.vec <- c(1,2,3)
+
+
 LinearModelL1CV <- function( X.mat, y.vec, fold.vec, n.folds=5, penalty.vec, step.size ){
   if(!is.matrix(X.mat)){
     stop("X.mat must be a matrix")
@@ -238,7 +249,7 @@ LinearModelL1CV <- function( X.mat, y.vec, fold.vec, n.folds=5, penalty.vec, ste
   if(!is.numeric(fold.vec)){
     stop("fold.vec must be a numeric vector")
   }
-  if( !(is.integer(n.folds) && n.folds > 0)) {
+  if( !(is.numeric(n.folds) && n.folds > 0)) {
     stop("n.folds must be an integer and greater than zero")
   }
   if( !(is.numeric(penalty.vec)) ){
@@ -264,7 +275,7 @@ LinearModelL1CV <- function( X.mat, y.vec, fold.vec, n.folds=5, penalty.vec, ste
     
     # For each train/validation split, use LinearModelL1penalties to compute the predictions for all observations
     fold.result <- LinearModelL1penalties( X.mat, y.vec, penalty.vec, step.size )
-    fold.pred <- cbind(1, X.mat) %*% fold.result$W.mat
+    fold.pred <- cbind(1, X.mat) %*% fold.result
     
     # Calculate the loss for the fold 
     # use the square loss for regression and the 01-loss for binary classification
