@@ -32,7 +32,7 @@
 #' initial.weight.vec <- rep( 0, l=ncol(X.filtered) +1)
 #' step.size <- 0.1
 #' penalty <- 1
-#' weight.vec <- LinearModelL1( X.filtered, y.train, penalty, opt.thresh, initial.weight.vec, step.size )
+#' LinearModelL1( X.filtered, y.train, penalty, opt.thresh, initial.weight.vec, step.size )
 
 LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.weight.vec, step.size ){
   if(!is.matrix(X.scaled.mat)){
@@ -112,8 +112,9 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
   u.vec <- w.vec + step.size * d.vec
   
   count <- 0
+  max.loop <- 1000
   
-  while((is.opt(d.vec, w.vec) == FALSE) & ( count < 1000 ) ){
+  while((is.opt(d.vec, w.vec) == FALSE) & ( count < max.loop ) ){
     
     d.vec <- grad.loss(X.int, w.vec)
     
@@ -142,7 +143,22 @@ LinearModelL1 <- function( X.scaled.mat, y.vec, penalty, opt.thresh, initial.wei
 #' @export
 #'
 #' @examples
-#' 
+#' data(zip.train, package = "ElemStatLearn")
+#' all.y.vec <- zip.train[,1]
+#' is.01<- all.y.vec %in% c(0,1)
+#' y.vec <- all.y.vec[is.01]
+#' X.mat <- zip.train[is.01, -1]
+#' n.folds <- 5
+#' fold.vec <- sample(rep(1:n.folds, l=nrow(X.mat)))
+#' validation.fold <- 1
+#' is.train <- fold.vec != validation.fold
+#' is.validation <- fold.vec == validation.fold
+#' X.train <- X.mat[is.train,]
+#' y.train <- y.vec[is.train]
+#' step.size <- 0.1
+#' penalty.vec <- c(1,2,3)
+#' LinearModelL1penalties( X.train, y.train, penalty.vec, step.size )
+
 LinearModelL1penalties <- function( X.mat, y.vec, penalty.vec, step.size ){
   if(!is.matrix(X.mat)){
     stop("X.mat must be a matrix")
@@ -161,34 +177,37 @@ LinearModelL1penalties <- function( X.mat, y.vec, penalty.vec, step.size ){
   X.scaled.mat <- scale(X.mat)
   
   # filter X.scaled.mat to remove 0 values
-  X.filtered <- X.scaled.mat[ , attr(X.scaled.mat, "scaled:scale") != 0]
+  # X.filtered <- X.scaled.mat[ , attr(X.scaled.mat, "scaled:scale") != 0]
   
   # intialize w.mat for storing w.vec for each penalty
-  w.mat <- matrix(0, ncol(X.filtered)+1, length(penalty.vec))
+  w.mat <- matrix(0, ncol(X.scaled.mat)+1, length(penalty.vec))
   
   # determine if y.vec is binary and create y.tilde if so
-  is.01<- all.y.vec %in% c(0,1)
+  is.01<- y.vec %in% c(0,1)
   
   # initialize opt.thresh and initial.weight.vec to prime loop
   opt.thresh <- 0.01
-  initial.weight.vec <- rep( 0, l=ncol(X.filtered)+1 )
+  initial.weight.vec <- rep( 0, l=ncol(X.scaled.mat)+1 )
   
   # loop through penalty.vec calling LinearModelL1 for each one
+  index <- 1
   for( penalty in penalty.vec ) {
-    w.tilde.opt.vec <- LinearModelL1( X.filtered, y.vec, penalty, opt.thresh, initial.weight.vec, step.size )
+    w.tilde.opt.vec <- LinearModelL1( X.scaled.mat, y.vec, penalty, opt.thresh, initial.weight.vec, step.size )
     
     # prime initial.weight.vec for warm restart
     initial.weight.vec <- w.tilde.opt.vec
     
     # unscale w.opt.sc.vec and 
-    w.orig <- w.tilde.opt.vec/attr(X.filtered, "scaled:scale")
-    b.orig <- -t(w.tilde.opt.vec/attr(X.filtered, "scaled:scale")) %*% attr(X.filtered, "scaled:center")
+
+    w.orig <- w.tilde.opt.vec[-1]/attr(X.scaled.mat, "scaled:scale")
+    b.orig <- -t(w.tilde.opt.vec[-1]/attr(X.scaled.mat, "scaled:scale")) %*% attr(X.scaled.mat, "scaled:center")
     
     # store unscaled result
-    w.mat[ , penalty.index ] <- c(b.orig, w.orig)
+    w.mat[ , index ] <- c(b.orig, w.orig)
+    index <- index + 1
   }
   
-  return (W.mat)
+  return (w.mat)
 
 }
 
